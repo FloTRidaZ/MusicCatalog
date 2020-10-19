@@ -5,10 +5,26 @@
     xmlns:local="using:Client01"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:Client01.Scripts"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock Text="Artist page"></TextBlock>
+        <GridView x:Name="ArtistGrid" ItemsSource="{x:Bind ArtistList}">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="data:Artist">
+                    <StackPanel>
+                        <TextBlock Text="{x:Bind Id}" Width="auto" Margin="20,20,20,20">
+                        </TextBlock>
+                        <TextBlock Text="{x:Bind Name}" Width="auto" Margin="20,20,20,20">
+                        </TextBlock>
+                        <TextBlock Text="{x:Bind Cover}" Width="auto" Margin="20,20,20,20">
+                        </TextBlock>
+                        <TextBlock Text="{x:Bind TextData}" Width="auto" Margin="20,20,20,20">
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </Grid>
 </Page>

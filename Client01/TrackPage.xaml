@@ -9,8 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock Text="Track page" x:Name="TextBlock"></TextBlock>
-        <GridView x:Name="grid">
-        </GridView>
+        <Image Width="100" Height="100" Source="https://94.181.190.105/DESKTOP-HBEEL2G/SQLEXPRESS/music_catalog_assets_store/image_store/album_machine_head.jpg"></Image>
     </Grid>
 </Page>

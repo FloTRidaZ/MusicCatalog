@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Client01.Scripts;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -7,12 +10,15 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Core;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace Client01
@@ -22,6 +28,8 @@ namespace Client01
     /// </summary>
     sealed partial class App : Application
     {
+        private const string connectionString = @"Data Source = DESKTOP-HBEEL2G\SQLEXPRESS; Initial Catalog = MusicCatalogDB; User ID = sa; Password = flotridaz58rus";
+        public List<Artist> ArtistList { get; private set; }
         /// <summary>
         /// Инициализирует одноэлементный объект приложения. Это первая выполняемая строка разрабатываемого
         /// кода, поэтому она является логическим эквивалентом main() или WinMain().
@@ -30,6 +38,7 @@ namespace Client01
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
         }
 
         /// <summary>
@@ -39,6 +48,7 @@ namespace Client01
         /// <param name="e">Сведения о запросе и обработке запуска.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            InitData();
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Не повторяйте инициализацию приложения, если в окне уже имеется содержимое,
@@ -70,6 +80,37 @@ namespace Client01
                 }
                 // Обеспечение активности текущего окна
                 Window.Current.Activate();
+            }
+        }
+
+        private void InitData()
+        {
+            ArtistList = new List<Artist>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT id, name, CAST(cover AS NVARCHAR(MAX)) as cover," +
+                        "CAST(info as NVARCHAR(MAX)) as info FROM album_table";
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            
+                            
+                            Artist artist = new Artist(
+                                reader.GetInt32(0),
+                                reader.GetString(1),
+                                reader.GetString(2),
+                                reader.GetString(3)
+                            );
+
+                            ArtistList.Add(artist);
+                          
+                        }
+                    }
+                }
             }
         }
 

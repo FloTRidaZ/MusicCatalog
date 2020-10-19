@@ -26,18 +26,7 @@ namespace Client01
         public TrackPage()
         {
             this.InitializeComponent();
-            using(SqlConnection connection = new SqlConnection(@"Data Source = DESKTOP-HBEEL2G\SQLEXPRESS; Initial Catalog = MusicCatalogDB; User ID = sa; Password = flotridaz58rus")) {
-                connection.Open();
-                using(SqlCommand cmd = connection.CreateCommand())
-                {
-                    cmd.CommandText = "select * from track_table";
-                    using(SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        reader.Read();
-                        TextBlock.Text = reader.GetString(1);
-                    }
-                }
-            }
+           
         }
     }
 }

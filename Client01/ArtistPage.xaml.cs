@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client01.Scripts;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,11 @@ namespace Client01
     /// </summary>
     public sealed partial class ArtistPage : Page
     {
+        private List<Artist> ArtistList;
         public ArtistPage()
         {
             this.InitializeComponent();
+            ArtistList = (App.Current as App).ArtistList;
         }
     }
 }
