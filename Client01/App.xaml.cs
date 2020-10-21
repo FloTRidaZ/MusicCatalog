@@ -137,5 +137,10 @@ namespace Client01
             //TODO: Сохранить состояние приложения и остановить все фоновые операции
             deferral.Complete();
         }
+
+        public string GetConnectionString()
+        {
+            return connectionString;
+        }
     }
 }

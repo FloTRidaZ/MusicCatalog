@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Image Width="100" Height="100" Source="https://94.181.190.105/DESKTOP-HBEEL2G/SQLEXPRESS/music_catalog_assets_store/image_store/album_machine_head.jpg"></Image>
+        <Image Width="100" Height="100" x:Name="Image"></Image>
     </Grid>
 </Page>
