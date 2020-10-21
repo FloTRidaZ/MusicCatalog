@@ -1,42 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Client01.Scripts
 {
-    public class Artist 
+    public sealed class Artist 
     {
         public int Id { get; }
         public string Name { get; }
-        public string Cover { get; }
-        public string TextData { get; }
-
-        public Artist(int id, string name, string cover, string textData)
+        public BitmapImage CoverSrc { get; private set; }
+        public SqlBinary TextData { get; }
+        public List<Album> AlbumList {
+            get
+            {
+                return AlbumList;
+            }
+            set
+            {
+                if (AlbumList is null)
+                {
+                    AlbumList = value;
+                }
+            }
+        }
+        public Artist(int id, string name, Stream coverStream, SqlBinary textData)
         {
             Id = id;
             Name = name;
-            Cover = cover;
             TextData = textData;
+            CreateCover(coverStream);
+        }
+
+        public async void CreateCover(Stream coverStream)
+        {
+            CoverSrc = new BitmapImage();
+            IRandomAccessStream src = WindowsRuntimeStreamExtensions.AsRandomAccessStream(coverStream);
+            await CoverSrc.SetSourceAsync(src);
             
         }
-
-        public async void demo()
-        {
-           
-        }
-
-       
     }
 }

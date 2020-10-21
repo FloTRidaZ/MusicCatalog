@@ -5,10 +5,23 @@
     xmlns:local="using:Client01"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:Client01.Scripts"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock Text="Album page"></TextBlock>
+        <GridView ItemsSource="{x:Bind AlbumList}" Margin="5, 5, 5, 5">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="data:Album">
+                    <StackPanel Margin="2.5, 0, 2.5, 0">
+                        <Image Source="{x:Bind CoverSrc}" Width="200" Height="200"></Image>
+                        <TextBlock
+                            Text="{x:Bind Name}" Margin="0, 10, 0, 0" FontSize="18" MaxLines="1"
+                            HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"
+                         />
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </Grid>
 </Page>

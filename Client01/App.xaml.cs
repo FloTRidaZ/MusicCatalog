@@ -30,6 +30,7 @@ namespace Client01
     {
         private const string connectionString = @"Data Source = DESKTOP-HBEEL2G\SQLEXPRESS; Initial Catalog = MusicCatalogDB; User ID = sa; Password = flotridaz58rus";
         public List<Artist> ArtistList { get; private set; }
+        public List<Album> AlbumList { get; private set; }
         /// <summary>
         /// Инициализирует одноэлементный объект приложения. Это первая выполняемая строка разрабатываемого
         /// кода, поэтому она является логическим эквивалентом main() или WinMain().
@@ -86,13 +87,15 @@ namespace Client01
         private void InitData()
         {
             ArtistList = new List<Artist>();
+            AlbumList = new List<Album>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 using (SqlCommand cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, name, CAST(cover AS NVARCHAR(MAX)) as cover," +
-                        "CAST(info as NVARCHAR(MAX)) as info FROM album_table";
+                    cmd.CommandText = "SELECT at.id, at.name, it.file_stream AS cover, tdt.file_stream AS info FROM artist_table AS at " +
+                        "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
+                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.info AS NVARCHAR(MAX));";
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -102,14 +105,44 @@ namespace Client01
                             Artist artist = new Artist(
                                 reader.GetInt32(0),
                                 reader.GetString(1),
-                                reader.GetString(2),
-                                reader.GetString(3)
+                                reader.GetStream(2),
+                                reader.GetSqlBinary(3)
                             );
 
                             ArtistList.Add(artist);
                           
                         }
                     }
+                    cmd.CommandText = "SELECT at.id, at.name, art.name AS artist, gt.name AS genre, it.file_stream AS cover, tdt.file_stream AS info " +
+                        "FROM album_table AS at " +
+                        "JOIN artist_table AS art ON art.id LIKE at.artist " +
+                        "JOIN genre_table AS gt ON gt.id LIKE at.genre " +
+                        "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
+                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.info AS NVARCHAR(MAX));";
+                    using (SqlDataReader reader1 = cmd.ExecuteReader())
+                    {
+                        Artist artist;
+                        while (reader1.Read())
+                        {
+                            artist = ArtistList.Find(a => a.Name == reader1.GetString(2));
+                            Album album = new Album(
+                                reader1.GetInt32(0),
+                                reader1.GetString(1),
+                                artist,
+                                reader1.GetStream(4),
+                                reader1.GetSqlBinary(5),
+                                reader1.GetString(3)
+
+                            );
+                            AlbumList.Add(album);
+                        }
+                    }
+                    cmd.CommandText = "SELECT it.file_stream AS image, mt.file_stream as music, tdt.file_stream as text_data FROM image_table AS it, " +
+                        "asset_table AS at " +
+                        "JOIN music_table AS mt ON CAST(mt.path_locator AS nvarchar(MAX)) LIKE CAST(at.music_asset AS nvarchar(MAX)) " +
+                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS nvarchar(MAX)) LIKE CAST(at.text_asset AS nvarchar(MAX))" +
+                        "WHERE CAST(it.path_locator AS nvarchar(MAX)) LIKE CAST(at.image_asset AS nvarchar(MAX));";
+
                 }
             }
         }

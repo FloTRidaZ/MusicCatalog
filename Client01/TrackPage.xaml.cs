@@ -28,29 +28,6 @@ namespace Client01
         public TrackPage()
         {
             this.InitializeComponent();
-            App app = Application.Current as App;
-            Artist artist = app.ArtistList[1];
-            using (SqlConnection connection = new SqlConnection(app.GetConnectionString()))
-            {
-                using (SqlCommand command = connection.CreateCommand())
-                {
-                    connection.Open();
-                    command.CommandText = @"SELECT file_stream FROM image_table WHERE CAST(path_locator AS NVARCHAR(MAX)) LIKE '" + artist.Cover + "'";
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        reader.Read();
-                        BitmapImage bitmap = new BitmapImage();
-                        SetStream(bitmap, reader);                     
-                        Image.Source = bitmap;
-                    }
-                }
-            }
-                
-        }
-
-        public async void SetStream(BitmapImage bitmap, SqlDataReader reader)
-        {
-            await bitmap.SetSourceAsync(WindowsRuntimeStreamExtensions.AsRandomAccessStream(reader.GetStream(0)));
         }
     }
 }

@@ -10,18 +10,18 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <GridView x:Name="ArtistGrid" ItemsSource="{x:Bind ArtistList}">
+        <GridView x:Name="ArtistGrid" ItemsSource="{x:Bind ArtistList}" Margin="5, 5, 5, 5">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="data:Artist">
-                    <StackPanel>
-                        <TextBlock Text="{x:Bind Id}" Width="auto" Margin="20,20,20,20">
-                        </TextBlock>
-                        <TextBlock Text="{x:Bind Name}" Width="auto" Margin="20,20,20,20">
-                        </TextBlock>
-                        <TextBlock Text="{x:Bind Cover}" Width="auto" Margin="20,20,20,20">
-                        </TextBlock>
-                        <TextBlock Text="{x:Bind TextData}" Width="auto" Margin="20,20,20,20">
-                        </TextBlock>
+                    <StackPanel Margin="2.5, 0, 2.5, 0">
+                        <Image Source="{x:Bind CoverSrc}" Width="200" Height="200">
+                        </Image>
+                        <TextBlock 
+                            Text="{x:Bind Name}" HorizontalAlignment="Center"
+                            FontSize="18" MaxLines="1" TextTrimming="CharacterEllipsis"
+                            Margin="0, 10, 0, 0"
+                         />
+
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>

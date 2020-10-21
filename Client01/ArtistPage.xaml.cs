@@ -23,7 +23,7 @@ namespace Client01
     /// </summary>
     public sealed partial class ArtistPage : Page
     {
-        private List<Artist> ArtistList;
+        private readonly List<Artist> ArtistList;
         public ArtistPage()
         {
             this.InitializeComponent();
