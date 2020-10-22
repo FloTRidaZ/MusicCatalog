@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Client01.Scripts;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Data.SqlClient;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -13,8 +13,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Client01.Scripts;
-using Windows.UI.Xaml.Media.Imaging;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,11 +23,17 @@ namespace Client01
     /// </summary>
     public sealed partial class TrackPage : Page
     {
-        private readonly List<Track> TrackList;
         public TrackPage()
         {
             this.InitializeComponent();
-            TrackList = (Application.Current as App).CatalogCollection.GetTrackList();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            Track target = e.Parameter as Track;
+            Cover.Source = target.Album.CoverSrc;
+            TrackName.Text = target.Name;
         }
     }
 }

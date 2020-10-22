@@ -58,7 +58,6 @@ namespace Client01
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-
         }
 
         /// <summary>
@@ -69,11 +68,10 @@ namespace Client01
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             InitData();
-            Frame rootFrame = Window.Current.Content as Frame;
 
             // Не повторяйте инициализацию приложения, если в окне уже имеется содержимое,
             // только обеспечьте активность окна
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Создание фрейма, который станет контекстом навигации, и переход к первой странице
                 rootFrame = new Frame();

@@ -4,9 +4,9 @@ namespace Client01.Scripts
 {
     public sealed class MusicCatalogCollection
     {
-        private ArtistCollection _artistCollection;
-        private AlbumCollection _albumCollection;
-        private TrackCollection _trackCollection;
+        private readonly ArtistCollection _artistCollection;
+        private readonly AlbumCollection _albumCollection;
+        private readonly TrackCollection _trackCollection;
 
         public MusicCatalogCollection()
         {

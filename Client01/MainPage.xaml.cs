@@ -24,8 +24,8 @@ namespace Client01
     {
         private readonly List<(string tag, Type page)> _pages = new List<(string tag, Type page)> 
         { 
-            ("track", typeof(TrackPage)),
-            ("artist", typeof(ArtistPage)),
+            ("track", typeof(TrackListPage)),
+            ("artist", typeof(ArtistListPage)),
             ("album", typeof(AlbumPage)) 
         };
         public MainPage()
@@ -48,7 +48,7 @@ namespace Client01
             navigationView.SelectedItem = navigationView.MenuItems[0];
             NavigationViewItem settingsItem = navigationView.SettingsItem as NavigationViewItem;
             settingsItem.Visibility = Visibility.Collapsed;
-            ContentFrame.Navigate(typeof(TrackPage));
+            ContentFrame.Navigate(typeof(TrackListPage));
         }
     }
 }

@@ -116,14 +116,14 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AlbumPage.xaml.cs">
-      <DependentUpon>AlbumPage.xaml</DependentUpon>
+    <Compile Include="AlbumListPage.xaml.cs">
+      <DependentUpon>AlbumListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ArtistPage.xaml.cs">
-      <DependentUpon>ArtistPage.xaml</DependentUpon>
+    <Compile Include="ArtistListPage.xaml.cs">
+      <DependentUpon>ArtistListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -138,6 +138,9 @@
     <Compile Include="Scripts\MusicCatalogCollection.cs" />
     <Compile Include="Scripts\Track.cs" />
     <Compile Include="Scripts\TrackCollection.cs" />
+    <Compile Include="TrackListPage.xaml.cs">
+      <DependentUpon>TrackListPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TrackPage.xaml.cs">
       <DependentUpon>TrackPage.xaml</DependentUpon>
     </Compile>
@@ -162,17 +165,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="AlbumPage.xaml">
+    <Page Include="AlbumListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ArtistPage.xaml">
+    <Page Include="ArtistListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TrackListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TrackPage.xaml">
       <SubType>Designer</SubType>

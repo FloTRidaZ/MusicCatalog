@@ -21,10 +21,10 @@ namespace Client01
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class ArtistPage : Page
+    public sealed partial class ArtistListPage : Page
     {
         private readonly List<Artist> ArtistList;
-        public ArtistPage()
+        public ArtistListPage()
         {
             this.InitializeComponent();
             ArtistList = (App.Current as App).CatalogCollection.GetArtistList();

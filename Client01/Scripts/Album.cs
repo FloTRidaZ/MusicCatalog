@@ -10,7 +10,7 @@ namespace Client01.Scripts
 {
     public sealed class Album
     {
-        private Genre _genre;
+        private readonly Genre _genre;
         public int Id { get; }
         public string Name { get; }
         public Artist Artist { get; }
