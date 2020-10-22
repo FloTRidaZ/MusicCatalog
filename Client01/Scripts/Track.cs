@@ -8,12 +8,12 @@
         public Artist Artist { get; }
         public Asset Asset { get; }
 
-        public Track(int id, string name, Album album, Artist artist, Asset asset)
+        public Track(int id, string name, Album album, Asset asset)
         {
             Id = id;
             Name = name;
             Album = album;
-            Artist = artist;
+            Artist = album.Artist;
             Asset = asset;
         }
 

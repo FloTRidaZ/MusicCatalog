@@ -27,7 +27,7 @@ namespace Client01
         public ArtistPage()
         {
             this.InitializeComponent();
-            ArtistList = (App.Current as App).ArtistList;
+            ArtistList = (App.Current as App).CatalogCollection.GetArtistList();
         }
     }
 }

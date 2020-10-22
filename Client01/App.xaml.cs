@@ -42,19 +42,14 @@ namespace Client01
                         "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
                         "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.info AS NVARCHAR(MAX));";
         private const string QUERY_FROM_ASSETS =
-            "SELECT at.id as id, at.asset_name as name, it.file_stream AS image, mt.file_stream as music, tdt.file_stream as text_data " +
-                        "FROM image_table AS it, asset_table AS at " +
-                        "JOIN music_table AS mt ON CAST(mt.path_locator AS nvarchar(MAX)) LIKE CAST(at.music_asset AS nvarchar(MAX)) " +
+            "SELECT at.id, at.asset_name, mt.stream_id as music_stream_id, tdt.file_stream as text_data " +
+                        "FROM music_table AS mt, asset_table AS at " +
                         "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS nvarchar(MAX)) LIKE CAST(at.text_asset AS nvarchar(MAX))" +
-                        "WHERE CAST(it.path_locator AS nvarchar(MAX)) LIKE CAST(at.image_asset AS nvarchar(MAX));";
+                        "WHERE CAST(mt.path_locator AS nvarchar(MAX)) LIKE CAST(at.music_asset AS nvarchar(MAX))";
         private const string QUERY_FROM_TRACK =
-            "SELECT tb.id, tb.name, alt.name AS album, art.name AS artist, tb.asset FROM track_table AS tb " +
-                        "JOIN album_table AS alt ON alt.id LIKE tb.album " +
-                        "JOIN artist_table AS art ON art.id LIKE tb.artist";
-        private List<Asset> _assetList;
-        public List<Artist> ArtistList { get; private set; }
-        public List<Album> AlbumList { get; private set; }
-        public List<Track> TrackList { get; private set; }
+            "SELECT tb.id, tb.name, alt.name AS album, tb.asset FROM track_table AS tb " +
+                        "JOIN album_table AS alt ON alt.id LIKE tb.album;";
+        public MusicCatalogCollection CatalogCollection { get; private set; }
         /// <summary>
         /// Инициализирует одноэлементный объект приложения. Это первая выполняемая строка разрабатываемого
         /// кода, поэтому она является логическим эквивалентом main() или WinMain().
@@ -110,48 +105,84 @@ namespace Client01
 
         private void InitData()
         {
+            CatalogCollection = new MusicCatalogCollection();
+            List<Artist> artistList;
+            List<Album> albumList;
+            List<Asset> assetList;
+            List<Track> trackList;
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             {
                 connection.Open();
-                BuildArtistList(connection);
-                BuildAlbumList(connection);
-                BuildAssetsList(connection);
-                BuildTrackList(connection);
+                artistList = BuildArtistList(connection);
+                albumList = BuildAlbumList(connection, artistList);
+                assetList = BuildAssetsList(connection);
+                trackList = BuildTrackList(connection, albumList, assetList);
             }
+            AttachToArtistList(artistList, albumList);
+            AttachToAlbumList(albumList, trackList);
+            CatalogCollection.AddArtistListOnce(artistList);
+            CatalogCollection.AddAlbumListOnce(albumList);
+            CatalogCollection.AddTrackListOnce(trackList);
         }
-
-        private void BuildTrackList(SqlConnection connection)
+        
+        private void AttachToArtistList(List<Artist> to, List<Album> from)
         {
-            TrackList = new List<Track>();
-            using(SqlCommand cmd = connection.CreateCommand())
+            foreach (Artist anArtist in to)
             {
-                cmd.CommandText = QUERY_FROM_TRACK;
-                using(SqlDataReader reader = cmd.ExecuteReader())
+                foreach(Album anAlbum in from)
                 {
-                    Artist artist;
-                    Album album;
-                    Asset asset;
-                    while (reader.Read())
+                    if (anAlbum.Artist.Name.Equals(anArtist.Name))
                     {
-                        artist = ArtistList.Find(art => art.Name == reader.GetString(3));
-                        album = AlbumList.Find(alb => alb.Name == reader.GetString(2));
-                        asset = _assetList.Find(lAsset => lAsset.Id == reader.GetInt32(4));
-                        Track track = new Track(
-                            reader.GetInt32(0),
-                            reader.GetString(1),
-                            album,
-                            artist,
-                            asset
-                        );
-                        TrackList.Add(track);
+                        anArtist.AlbumList.Add(anAlbum);
                     }
                 }
             }
         }
 
-        private void BuildAssetsList(SqlConnection connection)
+        private void AttachToAlbumList(List<Album> to, List<Track> from)
         {
-            _assetList = new List<Asset>();
+            foreach (Album anAlbum in to)
+            {
+                foreach (Track aTrack in from)
+                {
+                    if (aTrack.Album.Name.Equals(anAlbum.Name))
+                    {
+                        anAlbum.TrackList.Add(aTrack);
+                    }
+                }
+            }
+        }
+
+        private List<Track> BuildTrackList(SqlConnection connection, List<Album> albumList, List<Asset> assetList)
+        {
+            List<Track> trackList = new List<Track>();
+            using(SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = QUERY_FROM_TRACK;
+                using(SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Album album;
+                    Asset asset;
+                    while (reader.Read())
+                    {
+                        album = albumList.Find(alb => alb.Name == reader.GetString(2));
+                        asset = assetList.Find(lAsset => lAsset.Id == reader.GetInt32(3));
+                        Track track = new Track(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            album,
+                            asset
+                        );
+                        trackList.Add(track);
+                    }
+                }
+            }
+            return trackList;
+        }
+
+        private List<Asset> BuildAssetsList(SqlConnection connection)
+        {
+            List<Asset> assetList = new List<Asset>();
             using (SqlCommand cmd = connection.CreateCommand())
             {
                 cmd.CommandText = QUERY_FROM_ASSETS;
@@ -162,46 +193,46 @@ namespace Client01
                         Asset asset = new Asset(
                             reader.GetInt32(0),
                             reader.GetString(1),
-                            reader.GetStream(2),
-                            reader.GetSqlBinary(3),
-                            reader.GetSqlBinary(4)
+                            reader.GetGuid(2),
+                            reader.GetSqlBinary(3)
                         );
-                        _assetList.Add(asset);
+                        assetList.Add(asset);
                     }
                 }
             }
+            return assetList;
         }
 
-        private void BuildAlbumList(SqlConnection connection)
+        private List<Album> BuildAlbumList(SqlConnection connection, List<Artist> artistList)
         {
-            AlbumList = new List<Album>();
+            List<Album> albumList = new List<Album>();
             using (SqlCommand cmd = connection.CreateCommand())
             {
                 cmd.CommandText = QUERY_FROM_ALBUM;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Artist artist;
+                    while (reader.Read())
                     {
-                        Artist artist;
-                        while (reader.Read())
-                        {
-                            artist = ArtistList.Find(a => a.Name == reader.GetString(2));
-                            Album album = new Album(
-                                reader.GetInt32(0),
-                                reader.GetString(1),
-                                artist,
-                                reader.GetStream(4),
-                                reader.GetSqlBinary(5),
-                                reader.GetString(3)
-
-                            );
-                            AlbumList.Add(album);
-                        }
+                        artist = artistList.Find(a => a.Name == reader.GetString(2));
+                        Album album = new Album(
+                        reader.GetInt32(0),
+                        reader.GetString(1),
+                        artist,
+                        reader.GetStream(4),
+                        reader.GetSqlBinary(5),
+                        reader.GetString(3)
+                        );
+                        albumList.Add(album);
                     }
+                }
             }
+            return albumList;
         }
 
-        private void BuildArtistList(SqlConnection connection)
+        private List<Artist> BuildArtistList(SqlConnection connection)
         {
-            ArtistList = new List<Artist>();
+            List<Artist> artistList = new List<Artist>();
             using (SqlCommand cmd = connection.CreateCommand())
             {
                 cmd.CommandText = QUERY_FROM_ARTIST;
@@ -216,11 +247,12 @@ namespace Client01
                             reader.GetSqlBinary(3)
                         );
 
-                        ArtistList.Add(artist);
+                        artistList.Add(artist);
 
                     }
                 }
             }
+            return artistList;
         }
 
         /// <summary>

@@ -14,24 +14,13 @@ namespace Client01.Scripts
         public string Name { get; }
         public BitmapImage CoverSrc { get; private set; }
         public SqlBinary TextData { get; }
-        public List<Album> AlbumList {
-            get
-            {
-                return AlbumList;
-            }
-            set
-            {
-                if (AlbumList is null)
-                {
-                    AlbumList = value;
-                }
-            }
-        }
+        public List<Album> AlbumList { get; }
         public Artist(int id, string name, Stream coverStream, SqlBinary textData)
         {
             Id = id;
             Name = name;
             TextData = textData;
+            AlbumList = new List<Album>();
             CreateCover(coverStream);
         }
 

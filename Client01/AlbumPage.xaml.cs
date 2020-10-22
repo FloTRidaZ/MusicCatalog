@@ -23,11 +23,11 @@ namespace Client01
     /// </summary>
     public sealed partial class AlbumPage : Page
     {
-        private List<Album> AlbumList;
+        private readonly List<Album> AlbumList;
         public AlbumPage()
         {
             this.InitializeComponent();
-            AlbumList = (Application.Current as App).AlbumList;
+            AlbumList = (Application.Current as App).CatalogCollection.GetAlbumList();
         }
     }
 }

@@ -16,19 +16,7 @@ namespace Client01.Scripts
         public Artist Artist { get; }
         public BitmapImage CoverSrc { get; private set; }
         public SqlBinary TextData { get; }
-        public List<Track> TrackList {
-            get
-            {
-                return TrackList;
-            }
-            set
-            {
-                if (TrackList is null)
-                {
-                    TrackList = value;
-                }
-            }
-        }
+        public List<Track> TrackList { get; }
 
         public Album(int id, string name, Artist artist, Stream coverStream, SqlBinary textData, string genre)
         {
@@ -38,6 +26,7 @@ namespace Client01.Scripts
             TextData = textData;
             CreateCoverFromStream(coverStream);
             _genre = BuildGenre(genre);
+            TrackList = new List<Track>();
         }
 
         private Genre BuildGenre(string genre)
