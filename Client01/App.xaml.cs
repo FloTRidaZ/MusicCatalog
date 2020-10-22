@@ -28,9 +28,33 @@ namespace Client01
     /// </summary>
     sealed partial class App : Application
     {
-        private const string connectionString = @"Data Source = DESKTOP-HBEEL2G\SQLEXPRESS; Initial Catalog = MusicCatalogDB; User ID = sa; Password = flotridaz58rus";
+        private const string CONNECTION_STRING = @"Data Source = DESKTOP-HBEEL2G\SQLEXPRESS; Initial Catalog = MusicCatalogDB; User ID = sa; Password = flotridaz58rus";
+        private const string QUERY_FROM_ARTIST =
+            "SELECT at.id, at.name, it.file_stream AS cover, tdt.file_stream AS info FROM artist_table AS at " +
+                        "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
+                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.info AS NVARCHAR(MAX));";
+
+        private const string QUERY_FROM_ALBUM =
+            "SELECT at.id, at.name, art.name AS artist, gt.name AS genre, it.file_stream AS cover, tdt.file_stream AS info " +
+                        "FROM album_table AS at " +
+                        "JOIN artist_table AS art ON art.id LIKE at.artist " +
+                        "JOIN genre_table AS gt ON gt.id LIKE at.genre " +
+                        "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
+                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.info AS NVARCHAR(MAX));";
+        private const string QUERY_FROM_ASSETS =
+            "SELECT at.id as id, at.asset_name as name, it.file_stream AS image, mt.file_stream as music, tdt.file_stream as text_data " +
+                        "FROM image_table AS it, asset_table AS at " +
+                        "JOIN music_table AS mt ON CAST(mt.path_locator AS nvarchar(MAX)) LIKE CAST(at.music_asset AS nvarchar(MAX)) " +
+                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS nvarchar(MAX)) LIKE CAST(at.text_asset AS nvarchar(MAX))" +
+                        "WHERE CAST(it.path_locator AS nvarchar(MAX)) LIKE CAST(at.image_asset AS nvarchar(MAX));";
+        private const string QUERY_FROM_TRACK =
+            "SELECT tb.id, tb.name, alt.name AS album, art.name AS artist, tb.asset FROM track_table AS tb " +
+                        "JOIN album_table AS alt ON alt.id LIKE tb.album " +
+                        "JOIN artist_table AS art ON art.id LIKE tb.artist";
+        private List<Asset> _assetList;
         public List<Artist> ArtistList { get; private set; }
         public List<Album> AlbumList { get; private set; }
+        public List<Track> TrackList { get; private set; }
         /// <summary>
         /// Инициализирует одноэлементный объект приложения. Это первая выполняемая строка разрабатываемого
         /// кода, поэтому она является логическим эквивалентом main() или WinMain().
@@ -86,63 +110,115 @@ namespace Client01
 
         private void InitData()
         {
-            ArtistList = new List<Artist>();
-            AlbumList = new List<Album>();
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             {
                 connection.Open();
-                using (SqlCommand cmd = connection.CreateCommand())
+                BuildArtistList(connection);
+                BuildAlbumList(connection);
+                BuildAssetsList(connection);
+                BuildTrackList(connection);
+            }
+        }
+
+        private void BuildTrackList(SqlConnection connection)
+        {
+            TrackList = new List<Track>();
+            using(SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = QUERY_FROM_TRACK;
+                using(SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    cmd.CommandText = "SELECT at.id, at.name, it.file_stream AS cover, tdt.file_stream AS info FROM artist_table AS at " +
-                        "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
-                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.info AS NVARCHAR(MAX));";
+                    Artist artist;
+                    Album album;
+                    Asset asset;
+                    while (reader.Read())
+                    {
+                        artist = ArtistList.Find(art => art.Name == reader.GetString(3));
+                        album = AlbumList.Find(alb => alb.Name == reader.GetString(2));
+                        asset = _assetList.Find(lAsset => lAsset.Id == reader.GetInt32(4));
+                        Track track = new Track(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            album,
+                            artist,
+                            asset
+                        );
+                        TrackList.Add(track);
+                    }
+                }
+            }
+        }
+
+        private void BuildAssetsList(SqlConnection connection)
+        {
+            _assetList = new List<Asset>();
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = QUERY_FROM_ASSETS;
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Asset asset = new Asset(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            reader.GetStream(2),
+                            reader.GetSqlBinary(3),
+                            reader.GetSqlBinary(4)
+                        );
+                        _assetList.Add(asset);
+                    }
+                }
+            }
+        }
+
+        private void BuildAlbumList(SqlConnection connection)
+        {
+            AlbumList = new List<Album>();
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = QUERY_FROM_ALBUM;
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
+                        Artist artist;
                         while (reader.Read())
                         {
-                            
-                            
-                            Artist artist = new Artist(
+                            artist = ArtistList.Find(a => a.Name == reader.GetString(2));
+                            Album album = new Album(
                                 reader.GetInt32(0),
                                 reader.GetString(1),
-                                reader.GetStream(2),
-                                reader.GetSqlBinary(3)
-                            );
-
-                            ArtistList.Add(artist);
-                          
-                        }
-                    }
-                    cmd.CommandText = "SELECT at.id, at.name, art.name AS artist, gt.name AS genre, it.file_stream AS cover, tdt.file_stream AS info " +
-                        "FROM album_table AS at " +
-                        "JOIN artist_table AS art ON art.id LIKE at.artist " +
-                        "JOIN genre_table AS gt ON gt.id LIKE at.genre " +
-                        "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
-                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.info AS NVARCHAR(MAX));";
-                    using (SqlDataReader reader1 = cmd.ExecuteReader())
-                    {
-                        Artist artist;
-                        while (reader1.Read())
-                        {
-                            artist = ArtistList.Find(a => a.Name == reader1.GetString(2));
-                            Album album = new Album(
-                                reader1.GetInt32(0),
-                                reader1.GetString(1),
                                 artist,
-                                reader1.GetStream(4),
-                                reader1.GetSqlBinary(5),
-                                reader1.GetString(3)
+                                reader.GetStream(4),
+                                reader.GetSqlBinary(5),
+                                reader.GetString(3)
 
                             );
                             AlbumList.Add(album);
                         }
                     }
-                    cmd.CommandText = "SELECT it.file_stream AS image, mt.file_stream as music, tdt.file_stream as text_data FROM image_table AS it, " +
-                        "asset_table AS at " +
-                        "JOIN music_table AS mt ON CAST(mt.path_locator AS nvarchar(MAX)) LIKE CAST(at.music_asset AS nvarchar(MAX)) " +
-                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS nvarchar(MAX)) LIKE CAST(at.text_asset AS nvarchar(MAX))" +
-                        "WHERE CAST(it.path_locator AS nvarchar(MAX)) LIKE CAST(at.image_asset AS nvarchar(MAX));";
+            }
+        }
 
+        private void BuildArtistList(SqlConnection connection)
+        {
+            ArtistList = new List<Artist>();
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = QUERY_FROM_ARTIST;
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Artist artist = new Artist(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            reader.GetStream(2),
+                            reader.GetSqlBinary(3)
+                        );
+
+                        ArtistList.Add(artist);
+
+                    }
                 }
             }
         }
@@ -173,7 +249,7 @@ namespace Client01
 
         public string GetConnectionString()
         {
-            return connectionString;
+            return CONNECTION_STRING;
         }
     }
 }

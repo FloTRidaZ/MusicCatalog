@@ -25,9 +25,11 @@ namespace Client01
     /// </summary>
     public sealed partial class TrackPage : Page
     {
+        private List<Track> TrackList;
         public TrackPage()
         {
             this.InitializeComponent();
+            TrackList = (Application.Current as App).TrackList;
         }
     }
 }

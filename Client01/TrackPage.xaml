@@ -5,10 +5,23 @@
     xmlns:local="using:Client01"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:Client01.Scripts"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Image Width="100" Height="100" x:Name="Image"></Image>
+        <GridView ItemsSource="{x:Bind TrackList}">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="data:Track">
+                    <StackPanel>
+                        <Image Source="{x:Bind Asset.ImageSrc}" Width="200" Height="200"></Image>
+                        <TextBlock
+                            Text="{x:Bind Name}" Margin="0, 10, 0, 0" FontSize="18" MaxLines="1"
+                            HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"
+                         />
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </Grid>
 </Page>
