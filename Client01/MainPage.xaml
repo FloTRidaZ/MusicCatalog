@@ -15,8 +15,17 @@
                 <NavigationViewItem Content="Исполнители" Tag="artist"/>
                 <NavigationViewItem Content="Альбомы" Tag="album"/>
             </NavigationView.MenuItems>
-            <Frame x:Name="ContentFrame">
-            </Frame>
+            <ScrollViewer x:Name="Scroller">
+                <StackPanel>
+                    <Frame x:Name="ContentFrame">
+                    </Frame>
+                    <MediaPlayerElement AreTransportControlsEnabled="True" Visibility="Collapsed" x:Name="_media">
+                        <MediaPlayerElement.TransportControls>
+                            <MediaTransportControls></MediaTransportControls>
+                        </MediaPlayerElement.TransportControls>
+                    </MediaPlayerElement>
+                </StackPanel>
+            </ScrollViewer>
         </NavigationView>
     </Grid>
 </Page>
