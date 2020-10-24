@@ -29,5 +29,10 @@ namespace Client01
             this.InitializeComponent();
             ArtistList = (App.Current as App).CatalogCollection.GetArtistList();
         }
+
+        private void ArtistGrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ArtistPage), e.ClickedItem);
+        }
     }
 }

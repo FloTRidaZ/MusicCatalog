@@ -27,7 +27,7 @@ namespace Client01
         { 
             ("track", typeof(TrackListPage)),
             ("artist", typeof(ArtistListPage)),
-            ("album", typeof(AlbumPage)) 
+            ("album", typeof(AlbumListPage)) 
         };
         public MainPage()
         {

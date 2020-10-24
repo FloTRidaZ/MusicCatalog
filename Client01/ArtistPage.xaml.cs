@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -21,13 +22,22 @@ namespace Client01
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class AlbumListPage : Page
+    public sealed partial class ArtistPage : Page
     {
-        private readonly List<Album> AlbumList;
-        public AlbumListPage()
+        private List<Album> AlbumList;
+        public ArtistPage()
         {
             this.InitializeComponent();
-            AlbumList = (Application.Current as App).CatalogCollection.GetAlbumList();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            Artist artist = e.Parameter as Artist;
+            _cover.Source = artist.CoverSrc;
+            _artistName.Text = artist.Name;
+            _info.Text = Encoding.Default.GetString(artist.TextData.Value);
+            AlbumList = artist.AlbumList;
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)

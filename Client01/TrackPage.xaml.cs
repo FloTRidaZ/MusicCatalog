@@ -30,6 +30,7 @@ namespace Client01
     {
         private const string QUERY_FOR_MUSIC_SRC = "SELECT file_stream FROM music_table" +
             " WHERE CAST(stream_id AS nvarchar(MAX)) LIKE '{0}';";
+        private Track _track;
         public TrackPage()
         {
             this.InitializeComponent();
@@ -38,16 +39,16 @@ namespace Client01
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Track target = e.Parameter as Track;
-            _cover.Source = target.Album.CoverSrc;
-            _trackName.Text = target.Name;
-            _trackAlbum.Text = "Альбом " + target.Album.Name;
-            _trackArtist.Text = "Исполнитель " + target.Artist.Name;
-            _trackLetters.Text = Encoding.Default.GetString(target.Asset.TextDataSrc.Value);
+            _track = e.Parameter as Track;
+            _cover.Source = _track.Album.CoverSrc;
+            _trackName.Text = _track.Name;
+            _trackAlbum.Text = "Альбом " + _track.Album.Name;
+            _trackArtist.Text = "Исполнитель " + _track.Artist.Name;
+            _trackLetters.Text = "Текст песни\n" + Encoding.Default.GetString(_track.Asset.TextDataSrc.Value);
             MediaPlayerElement mediaPlayerElement = (this.Frame.Parent as StackPanel).Children.ToList().
              Find(ui => ui.GetType() == typeof(MediaPlayerElement)) as MediaPlayerElement;
             mediaPlayerElement.Visibility = Visibility.Visible;
-            CreateMediaSource(mediaPlayerElement.MediaPlayer, target);
+            CreateMediaSource(mediaPlayerElement.MediaPlayer, _track);
             
 
         }
@@ -69,7 +70,15 @@ namespace Client01
                 }
             }
         }
-        
-        
+
+        private void TrackAlbum_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(AlbumPage), _track.Album);
+        }
+
+        private void TrackArtist_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ArtistPage), _track.Artist);
+        }
     }
 }
