@@ -52,5 +52,10 @@ namespace Client01
             settingsItem.Visibility = Visibility.Collapsed;
             ContentFrame.Navigate(typeof(TrackListPage));
         }
+
+        private void NavigationViewItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ContentFrame.Navigate(typeof(AuthorizationPage));
+        }
     }
 }

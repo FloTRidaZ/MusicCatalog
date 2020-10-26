@@ -1,7 +1,17 @@
-﻿using Client01.Scripts;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -10,19 +20,11 @@ namespace Client01
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class TrackListPage : Page
+    public sealed partial class AuthorizationPage : Page
     {
-        private readonly List<Track> TrackList;
-        public TrackListPage()
+        public AuthorizationPage()
         {
             this.InitializeComponent();
-            App app = Application.Current as App;
-            TrackList = app.CatalogCollection.GetTrackList();
-        }
-
-        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            this.Frame.Navigate(typeof(TrackPage), e.ClickedItem);
         }
     }
 }

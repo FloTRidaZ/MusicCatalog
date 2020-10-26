@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel>
-        <GridView ItemsSource="{x:Bind TrackList}" Margin="5, 5, 5, 5" SelectionMode="None" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
+        <GridView ItemsSource="{x:Bind TrackList}" Margin="5, 5, 5, 5" SelectionMode="None" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" x:Name="_trackListGrid">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="data:Track">
                     <StackPanel Margin="2.5, 0, 2.5, 0">

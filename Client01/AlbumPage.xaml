@@ -32,7 +32,7 @@
                 TextWrapping="Wrap"
                 FontSize="20"
                 />
-            <GridView ItemsSource="{x:Bind TrackList}" RelativePanel.Below="_albumInfo" SelectionMode="None" IsItemClickEnabled="true" ItemClick="GridView_ItemClick">
+            <GridView ItemsSource="{x:Bind TrackList}" RelativePanel.Below="_albumInfo" SelectionMode="None" IsItemClickEnabled="true" ItemClick="GridView_ItemClick" Name="_trackList">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="data:Track">
                         <StackPanel Width="200">
@@ -48,6 +48,34 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
+            <TextBox
+                x:Name="_reviewTextInput"
+                Width="800"
+                MinHeight="100"
+                MaxHeight="100"
+                TextWrapping="Wrap"
+                RelativePanel.Below="_trackList"
+                />
+            <Button
+                x:Name="_buttonSend"
+                RelativePanel.Below="_reviewTextInput"
+                Content="Отправить"
+                />
+            <ListView RelativePanel.Below="_buttonSend" SelectionMode="None" IsItemClickEnabled="false" ItemsSource="{x:Bind ReviewList}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="data:Review">
+                        <StackPanel>
+                            <TextBlock 
+                                Text="{x:Bind Reviewer}"
+                                 />
+                            <TextBlock
+                                Text="{x:Bind Content}"
+                                TextWrapping="Wrap"
+                                />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </RelativePanel>
     </Grid>
 </Page>

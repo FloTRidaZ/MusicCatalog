@@ -15,6 +15,9 @@
                 <NavigationViewItem Content="Исполнители" Tag="artist"/>
                 <NavigationViewItem Content="Альбомы" Tag="album"/>
             </NavigationView.MenuItems>
+            <NavigationView.PaneFooter>
+                <NavigationViewItem Content="Авторизация" Tag="register" Tapped="NavigationViewItem_Tapped"/>
+            </NavigationView.PaneFooter>
             <ScrollViewer x:Name="Scroller">
                 <StackPanel Margin="0, 0, 16, 0">
                     <Frame x:Name="ContentFrame">

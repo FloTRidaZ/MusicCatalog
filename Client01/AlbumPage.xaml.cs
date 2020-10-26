@@ -1,18 +1,11 @@
 ﻿using Client01.Scripts;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Data.SqlClient;
 using System.Text;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
@@ -25,10 +18,36 @@ namespace Client01
     public sealed partial class AlbumPage : Page
     {
         private List<Track> TrackList;
+        private List<Review> ReviewList;
         private Album _album;
         public AlbumPage()
         {
             this.InitializeComponent();
+            App app = Application.Current as App;
+            BuildReviewList(app);
+        }
+
+        private void BuildReviewList(App app)
+        {
+            ReviewList = new List<Review>();
+            using (SqlConnection connection = new SqlConnection(app.GetConnectionString()))
+            {
+                connection.Open();
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "SELECT ac.name, rev.review_data FROM review_table AS rev JOIN account_table AS ac ON ac.login LIKE rev.acc_id;";
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Review review = new Review(
+                            reader.GetString(0),
+                            reader.GetString(1)
+                        );
+                        ReviewList.Add(review);
+                    }
+                    
+                }
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
