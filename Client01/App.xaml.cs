@@ -47,7 +47,7 @@ namespace Client01
                         "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS nvarchar(MAX)) LIKE CAST(at.text_asset AS nvarchar(MAX))" +
                         "WHERE CAST(mt.path_locator AS nvarchar(MAX)) LIKE CAST(at.music_asset AS nvarchar(MAX))";
         private const string QUERY_FROM_TRACK =
-            "SELECT tb.id, tb.name, alt.name AS album, tb.asset FROM track_table AS tb " +
+            "SELECT tb.id, tb.name, alt.name AS album, tb.asset, tb.album_pos FROM track_table AS tb " +
                         "JOIN album_table AS alt ON alt.id LIKE tb.album;";
         public MusicCatalogCollection CatalogCollection { get; private set; }
         /// <summary>
@@ -169,6 +169,7 @@ namespace Client01
                             reader.GetInt32(0),
                             reader.GetString(1),
                             album,
+                            reader.GetInt32(4),
                             asset
                         );
                         trackList.Add(track);
