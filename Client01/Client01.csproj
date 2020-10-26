@@ -145,7 +145,6 @@
     <Compile Include="Scripts\AlbumCollection.cs" />
     <Compile Include="Scripts\Artist.cs" />
     <Compile Include="Scripts\ArtistCollection.cs" />
-    <Compile Include="Scripts\Asset.cs" />
     <Compile Include="Scripts\Genre.cs" />
     <Compile Include="Scripts\MusicCatalogCollection.cs" />
     <Compile Include="Scripts\Review.cs" />

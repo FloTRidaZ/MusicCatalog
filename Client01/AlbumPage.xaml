@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <RelativePanel Margin="0, 0, 0, 16" x:Name="_parent">
+        <RelativePanel x:Name="_parent">
             <Image
                 x:Name="_cover"
                 Width="300"

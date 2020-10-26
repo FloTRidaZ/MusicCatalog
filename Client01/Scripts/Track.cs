@@ -1,4 +1,7 @@
-﻿namespace Client01.Scripts
+﻿using System;
+using System.Data.SqlTypes;
+
+namespace Client01.Scripts
 {
     public sealed class Track
     {
@@ -7,21 +10,21 @@
         public Album Album { get; }
         public int AlbumPosition {get;}
         public Artist Artist { get; }
-        public Asset Asset { get; }
+        public Guid SrcId { get; set; }
+        public SqlBinary Letters { get; set; }
 
-        public Track(int id, string name, Album album, int albumPos, Asset asset)
+        public Track(int id, string name, Album album, int albumPos)
         {
             Id = id;
             Name = name;
             Album = album;
             AlbumPosition = albumPos;
             Artist = album.Artist;
-            Asset = asset;
         }
 
-        public string GetGenre()
+        public string GetStringGenre()
         {
-            return Album.GetGenre();
+            return Album.GetStringGenre();
         }
         
     }

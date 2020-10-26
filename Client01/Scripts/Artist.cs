@@ -13,18 +13,16 @@ namespace Client01.Scripts
         public int Id { get; }
         public string Name { get; }
         public BitmapImage CoverSrc { get; private set; }
-        public SqlBinary TextData { get; }
+        public SqlBinary TextData { get; set; }
         public List<Album> AlbumList { get; }
-        public Artist(int id, string name, Stream coverStream, SqlBinary textData)
+        public Artist(int id, string name)
         {
             Id = id;
             Name = name;
-            TextData = textData;
             AlbumList = new List<Album>();
-            CreateCover(coverStream);
         }
 
-        public async void CreateCover(Stream coverStream)
+        public async void CreateCoverFromStream(Stream coverStream)
         {
             CoverSrc = new BitmapImage();
             IRandomAccessStream src = WindowsRuntimeStreamExtensions.AsRandomAccessStream(coverStream);

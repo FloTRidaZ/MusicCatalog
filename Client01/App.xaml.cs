@@ -29,6 +29,7 @@ namespace Client01
     sealed partial class App : Application
     {
         private const string CONNECTION_STRING = @"Data Source = DESKTOP-HBEEL2G\SQLEXPRESS; Initial Catalog = MusicCatalogDB; User ID = sa; Password = flotridaz58rus";
+        
         private const string QUERY_FROM_ARTIST =
             "SELECT at.id, at.name, it.file_stream AS cover, tdt.file_stream AS info FROM artist_table AS at " +
                         "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
@@ -41,14 +42,12 @@ namespace Client01
                         "JOIN genre_table AS gt ON gt.id LIKE at.genre " +
                         "JOIN image_table AS it ON CAST(it.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.cover AS NVARCHAR(MAX)) " +
                         "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(at.info AS NVARCHAR(MAX));";
-        private const string QUERY_FROM_ASSETS =
-            "SELECT at.id, at.asset_name, mt.stream_id as music_stream_id, tdt.file_stream as text_data " +
-                        "FROM music_table AS mt, asset_table AS at " +
-                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS nvarchar(MAX)) LIKE CAST(at.text_asset AS nvarchar(MAX))" +
-                        "WHERE CAST(mt.path_locator AS nvarchar(MAX)) LIKE CAST(at.music_asset AS nvarchar(MAX))";
+
         private const string QUERY_FROM_TRACK =
-            "SELECT tb.id, tb.name, alt.name AS album, tb.asset, tb.album_pos FROM track_table AS tb " +
-                        "JOIN album_table AS alt ON alt.id LIKE tb.album;";
+            "SELECT tb.id, tb.name, alt.name AS album, mt.stream_id as src, tdt.file_stream as letters, tb.album_pos FROM track_table AS tb " +
+                        "JOIN album_table AS alt ON alt.id LIKE tb.album " +
+                        "JOIN music_table AS mt ON CAST(mt.path_locator AS NVARCHAR(MAX)) LIKE CAST(tb.src AS NVARCHAR(MAX)) " +
+                        "JOIN text_data_table AS tdt ON CAST(tdt.path_locator AS NVARCHAR(MAX)) LIKE CAST(tb.letters AS NVARCHAR(MAX));";
         public MusicCatalogCollection CatalogCollection { get; private set; }
         /// <summary>
         /// Инициализирует одноэлементный объект приложения. Это первая выполняемая строка разрабатываемого
@@ -106,15 +105,13 @@ namespace Client01
             CatalogCollection = new MusicCatalogCollection();
             List<Artist> artistList;
             List<Album> albumList;
-            List<Asset> assetList;
             List<Track> trackList;
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             {
                 connection.Open();
                 artistList = BuildArtistList(connection);
                 albumList = BuildAlbumList(connection, artistList);
-                assetList = BuildAssetsList(connection);
-                trackList = BuildTrackList(connection, albumList, assetList);
+                trackList = BuildTrackList(connection, albumList);
             }
             AttachToArtistList(artistList, albumList);
             AttachToAlbumList(albumList, trackList);
@@ -151,7 +148,7 @@ namespace Client01
             }
         }
 
-        private List<Track> BuildTrackList(SqlConnection connection, List<Album> albumList, List<Asset> assetList)
+        private List<Track> BuildTrackList(SqlConnection connection, List<Album> albumList)
         {
             List<Track> trackList = new List<Track>();
             using(SqlCommand cmd = connection.CreateCommand())
@@ -160,46 +157,24 @@ namespace Client01
                 using(SqlDataReader reader = cmd.ExecuteReader())
                 {
                     Album album;
-                    Asset asset;
                     while (reader.Read())
                     {
                         album = albumList.Find(alb => alb.Name == reader.GetString(2));
-                        asset = assetList.Find(lAsset => lAsset.Id == reader.GetInt32(3));
                         Track track = new Track(
                             reader.GetInt32(0),
                             reader.GetString(1),
                             album,
-                            reader.GetInt32(4),
-                            asset
-                        );
+                            reader.GetInt32(5)
+                        )
+                        {
+                            SrcId = reader.GetGuid(3),
+                            Letters = reader.GetSqlBinary(4)
+                        };
                         trackList.Add(track);
                     }
                 }
             }
             return trackList;
-        }
-
-        private List<Asset> BuildAssetsList(SqlConnection connection)
-        {
-            List<Asset> assetList = new List<Asset>();
-            using (SqlCommand cmd = connection.CreateCommand())
-            {
-                cmd.CommandText = QUERY_FROM_ASSETS;
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Asset asset = new Asset(
-                            reader.GetInt32(0),
-                            reader.GetString(1),
-                            reader.GetGuid(2),
-                            reader.GetSqlBinary(3)
-                        );
-                        assetList.Add(asset);
-                    }
-                }
-            }
-            return assetList;
         }
 
         private List<Album> BuildAlbumList(SqlConnection connection, List<Artist> artistList)
@@ -218,10 +193,12 @@ namespace Client01
                         reader.GetInt32(0),
                         reader.GetString(1),
                         artist,
-                        reader.GetStream(4),
-                        reader.GetSqlBinary(5),
                         reader.GetString(3)
-                        );
+                        )
+                        {
+                            TextData = reader.GetSqlBinary(5)
+                        };
+                        album.CreateCoverFromStream(reader.GetStream(4));
                         albumList.Add(album);
                     }
                 }
@@ -241,11 +218,12 @@ namespace Client01
                     {
                         Artist artist = new Artist(
                             reader.GetInt32(0),
-                            reader.GetString(1),
-                            reader.GetStream(2),
-                            reader.GetSqlBinary(3)
-                        );
-
+                            reader.GetString(1)
+                        )
+                        { 
+                            TextData = reader.GetSqlBinary(3) 
+                        };
+                        artist.CreateCoverFromStream(reader.GetStream(2));
                         artistList.Add(artist);
 
                     }

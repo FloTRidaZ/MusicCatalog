@@ -36,7 +36,6 @@ namespace Client01
                 infoTextBlock.Text = "Оставлять комментарии могут только зарегистрированные пользователи";
                 _reviewBlockPanel.Children.Add(infoTextBlock);
             }
-            BuildReviewList();
         }
 
         private void BuildReviewList()
@@ -46,7 +45,7 @@ namespace Client01
             {
                 connection.Open();
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "SELECT ac.name, rev.review_data FROM review_table AS rev JOIN account_table AS ac ON ac.login LIKE rev.acc_id;";
+                cmd.CommandText = "SELECT ac.name, rev.review_data FROM review_table AS rev JOIN account_table AS ac ON ac.login LIKE rev.acc_id WHERE rev.album LIKE " + _album.Id;
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -71,6 +70,7 @@ namespace Client01
             _artistName.Text = _album.Artist.Name;
             _albumInfo.Text = Encoding.Default.GetString(_album.TextData.Value);
             TrackList = _album.TrackList;
+            BuildReviewList();
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)

@@ -22,8 +22,8 @@
                 </StackPanel>
             </NavigationView.PaneFooter>
             <ScrollViewer x:Name="Scroller">
-                <StackPanel Margin="0, 0, 16, 0">
-                    <Frame x:Name="ContentFrame">
+                <StackPanel>
+                    <Frame x:Name="ContentFrame" Margin="0, 0, 16, 0">
                     </Frame>
                     <MediaPlayerElement AreTransportControlsEnabled="True" Visibility="Collapsed" x:Name="_media">
                         <MediaPlayerElement.TransportControls>

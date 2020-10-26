@@ -3,29 +3,26 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.IO;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Client01.Scripts
 {
     public sealed class Album
     {
-        private readonly Genre _genre;
+        public Genre Genre { get; }
         public int Id { get; }
         public string Name { get; }
         public Artist Artist { get; }
         public BitmapImage CoverSrc { get; private set; }
-        public SqlBinary TextData { get; }
+        public SqlBinary TextData { get; set; }
         public List<Track> TrackList { get; }
 
-        public Album(int id, string name, Artist artist, Stream coverStream, SqlBinary textData, string genre)
+        public Album(int id, string name, Artist artist, string genre)
         {
             Id = id;
             Name = name;
             Artist = artist;
-            TextData = textData;
-            CreateCoverFromStream(coverStream);
-            _genre = BuildGenre(genre);
+            Genre = BuildGenre(genre);
             TrackList = new List<Track>();
         }
 
@@ -50,10 +47,10 @@ namespace Client01.Scripts
             return g;
         }
 
-        public string GetGenre()
+        public string GetStringGenre()
         {
             string genre = "Unknown";
-            switch (_genre)
+            switch (Genre)
             {
                 case Genre.HARD_ROCK:
                     genre = "Hard Rock";
@@ -70,10 +67,10 @@ namespace Client01.Scripts
 
         public Genre GetRawGenre()
         {
-            return _genre;
+            return Genre;
         }
 
-        private async void CreateCoverFromStream(Stream coverStream)
+        public async void CreateCoverFromStream(Stream coverStream)
         {
             IRandomAccessStream src = WindowsRuntimeStreamExtensions.AsRandomAccessStream(coverStream);
             CoverSrc= new BitmapImage();
