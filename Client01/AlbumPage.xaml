@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <RelativePanel Margin="0, 0, 0, 16">
+        <RelativePanel Margin="0, 0, 0, 16" x:Name="_parent">
             <Image
                 x:Name="_cover"
                 Width="300"
@@ -48,20 +48,22 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-            <TextBox
-                x:Name="_reviewTextInput"
-                Width="800"
-                MinHeight="100"
-                MaxHeight="100"
-                TextWrapping="Wrap"
-                RelativePanel.Below="_trackList"
-                />
-            <Button
-                x:Name="_buttonSend"
-                RelativePanel.Below="_reviewTextInput"
-                Content="Отправить"
-                />
-            <ListView RelativePanel.Below="_buttonSend" SelectionMode="None" IsItemClickEnabled="false" ItemsSource="{x:Bind ReviewList}">
+            <StackPanel x:Name="_reviewBlockPanel" RelativePanel.Below="_trackList">
+                <TextBox
+                    x:Name="_reviewTextInput"
+                    Width="800"
+                    MinHeight="100"
+                    MaxHeight="100"
+                    TextWrapping="Wrap"
+                    />
+                <Button
+                    x:Name="_buttonSend"
+                    Content="Отправить"
+                    Click="ButtonSend_Click"
+                    />
+            </StackPanel>
+            
+            <ListView RelativePanel.Below="_reviewBlockPanel" SelectionMode="None" IsItemClickEnabled="false" ItemsSource="{x:Bind ReviewList}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="data:Review">
                         <StackPanel>

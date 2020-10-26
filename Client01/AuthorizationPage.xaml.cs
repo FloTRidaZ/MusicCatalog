@@ -47,7 +47,10 @@ namespace Client01
                     }
                     reader.Read();
                     ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                    localSettings.Values["Name"] = reader.GetString(2);
+                    ApplicationDataCompositeValue valuePairs = new ApplicationDataCompositeValue();
+                    valuePairs.Add("email", email);
+                    valuePairs.Add("name", reader.GetString(2));
+                    localSettings.Values["acc"] = valuePairs;
                 }
                 ContentDialog success = new ContentDialog
                 {

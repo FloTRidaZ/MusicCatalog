@@ -30,7 +30,7 @@ namespace Client01
             _localSettings = ApplicationData.Current.LocalSettings;
             _items.Add(("Authorization", _toAuthorizationBtn));
             _items.Add(("Exit", _exitBtn));
-            if (_localSettings.Values.ContainsKey("Name"))
+            if (_localSettings.Values.ContainsKey("acc"))
             {
                 _toAuthorizationBtn.Visibility = Visibility.Collapsed;
                 _exitBtn.Visibility = Visibility.Visible;
@@ -64,7 +64,8 @@ namespace Client01
         {
             _toAuthorizationBtn.Visibility = Visibility.Visible;
             _exitBtn.Visibility = Visibility.Collapsed;
-            _localSettings.Values.Remove("Name");
+            _localSettings.Values.Remove("acc");
+            ContentFrame.Navigate(typeof(TrackListPage));
         }
     }
 }

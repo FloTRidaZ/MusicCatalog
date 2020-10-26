@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -19,18 +20,29 @@ namespace Client01
     {
         private List<Track> TrackList;
         private List<Review> ReviewList;
+        private ApplicationDataContainer _localSettings;
         private Album _album;
+        private App _app;
         public AlbumPage()
         {
             this.InitializeComponent();
-            App app = Application.Current as App;
-            BuildReviewList(app);
+            _app = Application.Current as App;
+            _localSettings = ApplicationData.Current.LocalSettings;
+            if (!_localSettings.Values.ContainsKey("acc"))
+            {
+                _reviewTextInput.Visibility = Visibility.Collapsed;
+                _buttonSend.Visibility = Visibility.Collapsed;
+                TextBlock infoTextBlock = new TextBlock();
+                infoTextBlock.Text = "Оставлять комментарии могут только зарегистрированные пользователи";
+                _reviewBlockPanel.Children.Add(infoTextBlock);
+            }
+            BuildReviewList();
         }
 
-        private void BuildReviewList(App app)
+        private void BuildReviewList()
         {
             ReviewList = new List<Review>();
-            using (SqlConnection connection = new SqlConnection(app.GetConnectionString()))
+            using (SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
             {
                 connection.Open();
                 SqlCommand cmd = connection.CreateCommand();
@@ -70,5 +82,19 @@ namespace Client01
         {
             this.Frame.Navigate(typeof(ArtistPage), _album.Artist);
         }
+
+        private void ButtonSend_Click(object sender, RoutedEventArgs e)
+        {
+            using(SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
+            {
+                connection.Open();
+                ApplicationDataCompositeValue valuePairs = _localSettings.Values["acc"] as ApplicationDataCompositeValue;
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "INSERT INTO review_table VALUES('" + valuePairs["email"] + "', '" + _reviewTextInput.Text.Trim() + "');";
+                cmd.ExecuteNonQuery();
+                _reviewTextInput.Text = "";
+            }
+        }
+
     }
 }
