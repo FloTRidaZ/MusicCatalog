@@ -9,14 +9,17 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <NavigationView x:Name="NavView"  SelectionChanged="NavigationView_SelectionChanged" Loaded="NavigationView_Loaded">
+        <NavigationView x:Name="_navView"  SelectionChanged="NavigationView_SelectionChanged" Loaded="NavigationView_Loaded">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Треки" Tag="track"/>
                 <NavigationViewItem Content="Исполнители" Tag="artist"/>
                 <NavigationViewItem Content="Альбомы" Tag="album"/>
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
-                <NavigationViewItem Content="Авторизация" Tag="register" Tapped="NavigationViewItem_Tapped"/>
+                <StackPanel>
+                    <NavigationViewItem Content="Авторизация" Tapped="ToAuthorizationItem_Tapped" x:Name="_toAuthorizationBtn"/>
+                    <NavigationViewItem Content="Выйти" x:Name="_exitBtn" Tapped="ExitBtn_Tapped" Visibility="Collapsed"></NavigationViewItem>
+                </StackPanel>
             </NavigationView.PaneFooter>
             <ScrollViewer x:Name="Scroller">
                 <StackPanel Margin="0, 0, 16, 0">

@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Data.SqlClient;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -22,9 +12,67 @@ namespace Client01
     /// </summary>
     public sealed partial class RegistrationPage : Page
     {
+        private readonly App _app;
         public RegistrationPage()
         {
             this.InitializeComponent();
+            _app = Application.Current as App;
+        }
+
+        private void BtnRegistration_Click(object sender, RoutedEventArgs e)
+        {
+            using (SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
+            {
+                connection.Open();
+                SqlCommand cmd = connection.CreateCommand();
+                string email = _emailInput.Text;
+                string password = _passwordInput.Password;
+                string repeatPassword = _repeatPasswordInput.Password;
+                string name = _nameInput.Text;
+                if (!IsValidateData(name, email, password, repeatPassword))
+                {
+                    return;
+                }
+                cmd.CommandText = "INSERT INTO account_table VALUES('" + email + "', '" + password + "', '" + name + "');";
+                cmd.ExecuteNonQuery();
+            }
+            this.Frame.Navigate(typeof(AuthorizationPage));
+
+        }
+
+        private bool IsValidateData(string name, string email, string password, string repeatPassword)
+        {
+            if (!email.Contains("@"))
+            {
+                ShowErrorDialog("Неправильный формат электронной почты");
+                return false;
+            }
+            if (name.Length == 0)
+            {
+                ShowErrorDialog("Введите имя");
+                return false;
+            }
+            if (email.Length < 4)
+            {
+                ShowErrorDialog("Слишком короткий логин");
+                return false;
+            }
+            if (password.Length < 4)
+            {
+                ShowErrorDialog("Слишком короткий пароль");
+                return false;
+            }
+            if (!password.Equals(repeatPassword))
+            {
+                ShowErrorDialog("Пароли не совпадают");
+                return false;
+            }
+            return true;
+        }
+
+        private async void ShowErrorDialog(string msg)
+        {
+            await new ContentDialog { Title = "Ошибка регистрации", Content = msg, PrimaryButtonText = "ОК"}.ShowAsync();
         }
     }
 }

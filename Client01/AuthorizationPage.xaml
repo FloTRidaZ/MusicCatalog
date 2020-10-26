@@ -9,6 +9,37 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <StackPanel>
+            <TextBox
+                Margin="16, 0, 0, 0"
+                HorizontalAlignment="Left"
+                x:Name="_emailInput"
+                Width="400"
+                Height="50"
+                MaxLength="50"
+                PlaceholderText="Введите логин"/>
+            <PasswordBox
+                Margin="16, 10, 0, 0"
+                HorizontalAlignment="Left"
+                x:Name="_passwordInput"
+                Width="400"
+                Height="50"
+                PlaceholderText="Введите пароль"/>
+            <TextBlock
+                x:Name="_infoText"
+                Text="Впервые здесь? Пройдите регистрацию!"
+                Margin="16, 10, 0, 0"
+                />
+            <Button
+                x:Name="_btnAuthorization"
+                Content="Авторизация"
+                Margin="16, 10, 0, 0"
+                Click="BtnAuthorization_Click"/>
+            <Button
+                x:Name="_btnToRegistration"
+                Content="Регистрация"
+                Margin="16, 10, 0, 0"
+                Click="ToRegistrationBtn_Click"/>
+        </StackPanel>
     </Grid>
 </Page>

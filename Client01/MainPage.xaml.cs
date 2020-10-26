@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x419
 
@@ -29,10 +21,20 @@ namespace Client01
             ("artist", typeof(ArtistListPage)),
             ("album", typeof(AlbumListPage)) 
         };
+        private List<(string tag, NavigationViewItem item)> _items = new List<(string tag, NavigationViewItem item)>();
+        private ApplicationDataContainer _localSettings;
         public MainPage()
         {
             this.InitializeComponent();
             _media.SetMediaPlayer(new MediaPlayer { Volume = 35 });
+            _localSettings = ApplicationData.Current.LocalSettings;
+            _items.Add(("Authorization", _toAuthorizationBtn));
+            _items.Add(("Exit", _exitBtn));
+            if (_localSettings.Values.ContainsKey("Name"))
+            {
+                _toAuthorizationBtn.Visibility = Visibility.Collapsed;
+                _exitBtn.Visibility = Visibility.Visible;
+            }
         }
 
 
@@ -53,9 +55,16 @@ namespace Client01
             ContentFrame.Navigate(typeof(TrackListPage));
         }
 
-        private void NavigationViewItem_Tapped(object sender, TappedRoutedEventArgs e)
+        private void ToAuthorizationItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            ContentFrame.Navigate(typeof(AuthorizationPage));
+            ContentFrame.Navigate(typeof(AuthorizationPage), _items);
+        }
+
+        private void ExitBtn_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            _toAuthorizationBtn.Visibility = Visibility.Visible;
+            _exitBtn.Visibility = Visibility.Collapsed;
+            _localSettings.Values.Remove("Name");
         }
     }
 }
