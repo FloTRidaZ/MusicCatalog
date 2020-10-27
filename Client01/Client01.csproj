@@ -116,44 +116,45 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AlbumListPage.xaml.cs">
+    <Compile Include="ru\kso\Database\Query\DBQueryCollection.cs" />
+    <Compile Include="ru\kso\Pages\PageAlbum\AlbumListPage.xaml.cs">
       <DependentUpon>AlbumListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AlbumPage.xaml.cs">
+    <Compile Include="ru\kso\Pages\PageAlbum\AlbumPage.xaml.cs">
       <DependentUpon>AlbumPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ArtistListPage.xaml.cs">
+    <Compile Include="ru\kso\Pages\PageArtist\ArtistListPage.xaml.cs">
       <DependentUpon>ArtistListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ArtistPage.xaml.cs">
+    <Compile Include="ru\kso\Pages\PageArtist\ArtistPage.xaml.cs">
       <DependentUpon>ArtistPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AuthorizationPage.xaml.cs">
+    <Compile Include="ru\kso\Pages\Account\AuthorizationPage.xaml.cs">
       <DependentUpon>AuthorizationPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
+    <Compile Include="ru\kso\Pages\Main\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegistrationPage.xaml.cs">
+    <Compile Include="ru\kso\Pages\Account\RegistrationPage.xaml.cs">
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Scripts\Album.cs" />
-    <Compile Include="Scripts\AlbumCollection.cs" />
-    <Compile Include="Scripts\Artist.cs" />
-    <Compile Include="Scripts\ArtistCollection.cs" />
-    <Compile Include="Scripts\Genre.cs" />
-    <Compile Include="Scripts\MusicCatalogCollection.cs" />
-    <Compile Include="Scripts\Review.cs" />
-    <Compile Include="Scripts\Track.cs" />
-    <Compile Include="Scripts\TrackCollection.cs" />
-    <Compile Include="TrackListPage.xaml.cs">
+    <Compile Include="ru\kso\Database\Datatype\Album.cs" />
+    <Compile Include="ru\kso\Database\Catalog\AlbumCollection.cs" />
+    <Compile Include="ru\kso\Database\Datatype\Artist.cs" />
+    <Compile Include="ru\kso\Database\Catalog\ArtistCollection.cs" />
+    <Compile Include="ru\kso\Database\Datatype\Genre.cs" />
+    <Compile Include="ru\kso\Database\Catalog\MusicCatalogCollection.cs" />
+    <Compile Include="ru\kso\Database\Datatype\Review.cs" />
+    <Compile Include="ru\kso\Database\Datatype\Track.cs" />
+    <Compile Include="ru\kso\Database\Catalog\TrackCollection.cs" />
+    <Compile Include="ru\kso\Pages\PageTrack\TrackListPage.xaml.cs">
       <DependentUpon>TrackListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TrackPage.xaml.cs">
+    <Compile Include="ru\kso\Pages\PageTrack\TrackPage.xaml.cs">
       <DependentUpon>TrackPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -177,39 +178,39 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="AlbumListPage.xaml">
+    <Page Include="ru\kso\Pages\PageAlbum\AlbumListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="AlbumPage.xaml">
+    <Page Include="ru\kso\Pages\PageAlbum\AlbumPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ArtistListPage.xaml">
+    <Page Include="ru\kso\Pages\PageArtist\ArtistListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ArtistPage.xaml">
+    <Page Include="ru\kso\Pages\PageArtist\ArtistPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="AuthorizationPage.xaml">
+    <Page Include="ru\kso\Pages\Account\AuthorizationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
+    <Page Include="ru\kso\Pages\Main\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="RegistrationPage.xaml">
+    <Page Include="ru\kso\Pages\Account\RegistrationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TrackListPage.xaml">
+    <Page Include="ru\kso\Pages\PageTrack\TrackListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TrackPage.xaml">
+    <Page Include="ru\kso\Pages\PageTrack\TrackPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -219,6 +220,7 @@
       <Version>6.2.10</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
