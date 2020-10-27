@@ -10,7 +10,7 @@
 
         public const string QUERY_FROM_REVIEW = "EXEC select_from_review {0};";
 
-        public const string QUERY_FOR_MUSIC_SRC = "EXEC get_track_src {0};";
+        public const string QUERY_FOR_MUSIC_SRC = "EXEC get_track_src '{0}';";
 
         public const string QUERY_FOR_REVIEW_INSERT = "EXEC insert_into_review '{0}', '{1}', {2};";
 
