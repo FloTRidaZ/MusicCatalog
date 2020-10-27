@@ -1,8 +1,10 @@
 ﻿using Client01.ru.kso.Database.Datatype;
 using Client01.ru.kso.Database.Query;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Client01.ru.kso.Database.Catalog
 {
@@ -34,22 +36,48 @@ namespace Client01.ru.kso.Database.Catalog
 
         private static void CreateCatalog(string connectionString)
         {
-            _catalog = new MusicCatalogCollection();
-            List<Artist> artistList;
-            List<Album> albumList;
-            List<Track> trackList;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                connection.Open();
-                artistList = BuildArtistList(connection);
-                albumList = BuildAlbumList(connection, artistList);
-                trackList = BuildTrackList(connection, albumList);
+                _catalog = new MusicCatalogCollection();
+                List<Artist> artistList;
+                List<Album> albumList;
+                List<Track> trackList;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    artistList = BuildArtistList(connection);
+                    albumList = BuildAlbumList(connection, artistList);
+                    trackList = BuildTrackList(connection, albumList);
+                }
+                AttachToArtistList(artistList, albumList);
+                AttachToAlbumList(albumList, trackList);
+                _catalog.SetArtistList(artistList);
+                _catalog.SetAlbumList(albumList);
+                _catalog.SetTrackList(trackList);
             }
-            AttachToArtistList(artistList, albumList);
-            AttachToAlbumList(albumList, trackList);
-            _catalog.SetArtistList(artistList);
-            _catalog.SetAlbumList(albumList);
-            _catalog.SetTrackList(trackList);
+            catch (SqlException)
+            {
+                ShowErrorDialog();
+            }
+        }
+
+        private async static void ShowErrorDialog()
+        {
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = "Ошибка соединения",
+                Content = "Ошибка соединения с удаленным сервером, пожалуйста проверьте подключение к интернету",
+                PrimaryButtonText = "ОК"
+            };
+            ManageDialog(await dialog.ShowAsync());
+        }
+
+        private static void ManageDialog(ContentDialogResult result)
+        {
+            if (result == ContentDialogResult.Primary)
+            {
+                Application.Current.Exit();
+            }
         }
 
         private MusicCatalogCollection()

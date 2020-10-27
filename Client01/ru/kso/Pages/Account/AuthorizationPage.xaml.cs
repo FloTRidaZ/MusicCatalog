@@ -1,4 +1,5 @@
-﻿using Client01.ru.kso.Pages.PageTrack;
+﻿using Client01.ru.kso.Database.Query;
+using Client01.ru.kso.Pages.PageTrack;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -26,46 +27,63 @@ namespace Client01.ru.kso.Pages.Account
 
         private void BtnAuthorization_Click(object sender, RoutedEventArgs e)
         {
-            using(SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
+            try
             {
-                connection.Open();
-                SqlCommand cmd = connection.CreateCommand();
-                string email = _emailInput.Text;
-                string password = _passwordInput.Password;
-                cmd.CommandText = "SELECT * FROM account_table WHERE login LIKE '" + email + "' AND password LIKE '" + password + "';";
-                using(SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
                 {
-                    if (!reader.HasRows)
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    string email = _emailInput.Text;
+                    string password = _passwordInput.Password;
+                    cmd.CommandText = string.Format(DBQueryCollection.QUERY_FROM_ACCOUNT, email, password);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        ContentDialog error = new ContentDialog
+                        if (!reader.HasRows)
                         {
-                            Title = "Ошибка авторизации",
-                            Content = "Неверно введен логин или пароль",
-                            PrimaryButtonText = "ОК"
-                        };
-                        ShowDialog(error);
-                        return;
+                            ContentDialog error = new ContentDialog
+                            {
+                                Title = "Ошибка авторизации",
+                                Content = "Неверно введен логин или пароль",
+                                PrimaryButtonText = "ОК"
+                            };
+                            ShowDialog(error);
+                            return;
+                        }
+                        reader.Read();
+                        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                        ApplicationDataCompositeValue valuePairs = new ApplicationDataCompositeValue();
+                        valuePairs.Add("email", email);
+                        valuePairs.Add("name", reader.GetString(2));
+                        localSettings.Values["acc"] = valuePairs;
                     }
-                    reader.Read();
-                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                    ApplicationDataCompositeValue valuePairs = new ApplicationDataCompositeValue();
-                    valuePairs.Add("email", email);
-                    valuePairs.Add("name", reader.GetString(2));
-                    localSettings.Values["acc"] = valuePairs;
+                    ContentDialog success = new ContentDialog
+                    {
+                        Title = "Успех",
+                        Content = "Авторизация прошла успешно",
+                        PrimaryButtonText = "ОК"
+                    };
+                    NavigationViewItem toAuthorizationItem = _items.Find(i => i.tag == "Authorization").item;
+                    NavigationViewItem exitItem = _items.Find(i => i.tag == "Exit").item;
+                    toAuthorizationItem.Visibility = Visibility.Collapsed;
+                    exitItem.Visibility = Visibility.Visible;
+                    this.Frame.Navigate(typeof(TrackListPage));
+                    ShowDialog(success);
                 }
-                ContentDialog success = new ContentDialog
-                {
-                    Title = "Успех",
-                    Content = "Авторизация прошла успешно",
-                    PrimaryButtonText = "ОК"
-                };
-                NavigationViewItem toAuthorizationItem = _items.Find(i => i.tag == "Authorization").item;
-                NavigationViewItem exitItem = _items.Find(i => i.tag == "Exit").item;
-                toAuthorizationItem.Visibility = Visibility.Collapsed;
-                exitItem.Visibility = Visibility.Visible;
-                this.Frame.Navigate(typeof(TrackListPage));
-                ShowDialog(success);
             }
+            catch (SqlException)
+            {
+                ShowErrorDialog();
+            }
+        }
+
+        private async void ShowErrorDialog()
+        {
+            await new ContentDialog
+            {
+                Title = "Ошибка соединения",
+                Content = "Ошибка соединения с сервером, пожалуйста проверьте подключение!",
+                PrimaryButtonText = "ОК"
+            }.ShowAsync();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

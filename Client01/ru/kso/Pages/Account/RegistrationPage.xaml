@@ -25,7 +25,7 @@
                 Width="400"
                 Height="50"
                 MaxLength="50"
-                PlaceholderText="Введите логин (не менее 4 символа)"/>
+                PlaceholderText="Введите почту (не менее 4 символа)"/>
             <PasswordBox
                 Margin="16, 10, 0, 0"
                 HorizontalAlignment="Left"

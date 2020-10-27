@@ -1,4 +1,5 @@
-﻿using Client01.ru.kso.Database.Datatype;
+﻿using Client01.ru.kso.Database.Catalog;
+using Client01.ru.kso.Database.Datatype;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,8 +17,7 @@ namespace Client01.ru.kso.Pages.PageTrack
         public TrackListPage()
         {
             this.InitializeComponent();
-            App app = Application.Current as App;
-            TrackList = app.CatalogCollection.GetTrackList();
+            TrackList = MusicCatalogCollection.GetCatalog().GetTrackList();
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)

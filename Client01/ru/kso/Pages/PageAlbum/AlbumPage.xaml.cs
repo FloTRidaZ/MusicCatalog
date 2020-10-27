@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
-using System.Windows.Input;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -119,7 +118,7 @@ namespace Client01.ru.kso.Pages.PageAlbum
                 connection.Open();
                 ApplicationDataCompositeValue valuePairs = _localSettings.Values["acc"] as ApplicationDataCompositeValue;
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO review_table VALUES('" + valuePairs["email"] + "', '" + _reviewTextInput.Text.Trim() + "');";
+                cmd.CommandText = string.Format(DBQueryCollection.QUERY_FOR_REVIEW_INSERT, valuePairs["email"].ToString(), _reviewTextInput.Text.Trim(), _album.Id.ToString());
                 cmd.ExecuteNonQuery();
                 _reviewTextInput.Text = "";
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client01.ru.kso.Database.Query;
+using System;
 using System.Data.SqlClient;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,23 +22,35 @@ namespace Client01.ru.kso.Pages.Account
 
         private void BtnRegistration_Click(object sender, RoutedEventArgs e)
         {
-            using (SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
+            try
             {
-                connection.Open();
-                SqlCommand cmd = connection.CreateCommand();
-                string email = _emailInput.Text;
-                string password = _passwordInput.Password;
-                string repeatPassword = _repeatPasswordInput.Password;
-                string name = _nameInput.Text;
-                if (!IsValidateData(name, email, password, repeatPassword))
+                using (SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
                 {
-                    return;
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    string email = _emailInput.Text;
+                    string password = _passwordInput.Password;
+                    string repeatPassword = _repeatPasswordInput.Password;
+                    string name = _nameInput.Text;
+                    if (!IsValidateData(name, email, password, repeatPassword))
+                    {
+                        return;
+                    }
+                    cmd.CommandText = string.Format(DBQueryCollection.QUERY_FOR_ACC_INSERT, email, password, name);
+                    cmd.ExecuteNonQuery();
+                    this.Frame.Navigate(typeof(AuthorizationPage));
+                    ShowInfoDialog();
                 }
-                cmd.CommandText = "INSERT INTO account_table VALUES('" + email + "', '" + password + "', '" + name + "');";
-                cmd.ExecuteNonQuery();
+            } catch (SqlException)
+            {
+                ShowErrorDialog("Потеряно соединение с интернетом");
             }
-            this.Frame.Navigate(typeof(AuthorizationPage));
 
+        }
+
+        private async void ShowInfoDialog()
+        {
+            await new ContentDialog { Title = "Успех", Content = "Регистрация прошла успешно", PrimaryButtonText = "ОК" }.ShowAsync();
         }
 
         private bool IsValidateData(string name, string email, string password, string repeatPassword)

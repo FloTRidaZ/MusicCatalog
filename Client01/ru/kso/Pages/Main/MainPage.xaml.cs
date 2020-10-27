@@ -69,6 +69,17 @@ namespace Client01.ru.kso.Pages.Main
             _logOutBtn.Visibility = Visibility.Collapsed;
             _localSettings.Values.Remove("acc");
             ContentFrame.Navigate(typeof(TrackListPage));
+            ShowDialog();
+        }
+
+        private async void ShowDialog()
+        {
+            await new ContentDialog
+            {
+                Title = "Информация",
+                Content = "Вы вышли из аккаунта",
+                PrimaryButtonText = "ОК"
+            }.ShowAsync();
         }
     }
 }
