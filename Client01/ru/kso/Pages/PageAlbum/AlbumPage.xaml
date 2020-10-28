@@ -14,8 +14,10 @@
             <Image
                 x:Name="_cover"
                 Width="300"
-                Height="300"/>
-            <StackPanel RelativePanel.RightOf="_cover" RelativePanel.AlignVerticalCenterWith="_cover">
+                Height="300"
+                Margin="40, 20, 0, 0"
+                HorizontalAlignment="Left"/>
+            <StackPanel RelativePanel.RightOf="_cover" RelativePanel.AlignVerticalCenterWith="_cover" Margin="20, 0, 40, 0">
                 <TextBlock
                     x:Name="_albumName"
                     FontSize="30"/>
@@ -26,16 +28,21 @@
                     Tapped="ArtistName_Tapped"/>
             </StackPanel>
             <TextBlock
-                RelativePanel.RightOf="_cover"
                 RelativePanel.Below="_cover"
                 x:Name="_albumInfo"
                 TextWrapping="Wrap"
+                Margin="40, 20, 40, 0"
                 FontSize="20"
+                TextAlignment="Justify"
                 />
-            <GridView ItemsSource="{x:Bind TrackList}" RelativePanel.Below="_albumInfo" SelectionMode="None" IsItemClickEnabled="true" ItemClick="AlbumList_ItemClick" Name="_trackList">
+            <GridView ItemsSource="{x:Bind TrackList}" RelativePanel.Below="_albumInfo"
+                      SelectionMode="None" IsItemClickEnabled="true" 
+                      ItemClick="AlbumList_ItemClick" 
+                      Name="_trackList"
+                      Margin="40, 20, 40, 0">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="data:Track">
-                        <StackPanel Width="200">
+                        <StackPanel Width="200" Margin="2.5, 0, 2.5, 0">
                             <Image Source="{x:Bind Album.CoverSrc}" Width="200" Height="200"></Image>
                             <TextBlock
                             Text="{x:Bind Name}"
@@ -48,7 +55,7 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-            <StackPanel x:Name="_reviewBlockPanel" RelativePanel.Below="_trackList">
+            <StackPanel x:Name="_reviewBlockPanel" RelativePanel.Below="_trackList" Margin="40, 20, 40, 0">
                 <TextBox
                     x:Name="_reviewTextInput"
                     Width="800"
@@ -60,19 +67,26 @@
                     x:Name="_buttonSend"
                     Content="Отправить"
                     Click="ButtonSend_Click"
+                    Margin="0, 10, 0, 0"
                     />
             </StackPanel>
             
-            <ListView RelativePanel.Below="_reviewBlockPanel" SelectionMode="None" IsItemClickEnabled="false" ItemsSource="{x:Bind ReviewList}">
+            <ListView RelativePanel.Below="_reviewBlockPanel" SelectionMode="None" IsItemClickEnabled="false" ItemsSource="{x:Bind ReviewList}" Margin="40, 20, 40, 0">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="data:Review">
-                        <StackPanel>
+                        <StackPanel Margin="0, 20, 0, 0">
                             <TextBlock 
                                 Text="{x:Bind Reviewer}"
+                                TextWrapping="Wrap"
+                                TextAlignment="Left"
+                                FontSize="20"
                                  />
                             <TextBlock
                                 Text="{x:Bind Content}"
                                 TextWrapping="Wrap"
+                                TextAlignment="Left"
+                                FontSize="18"
+                                Margin="0, 10, 0, 0"
                                 />
                         </StackPanel>
                     </DataTemplate>

@@ -19,6 +19,9 @@
                 <StackPanel>
                     <NavigationViewItem Content="Авторизация" Tapped="ToAuthorizationItem_Tapped" x:Name="_toAuthorizationBtn"/>
                     <NavigationViewItem Content="Выйти" x:Name="_logOutBtn" Tapped="LogOutBtn_Tapped" Visibility="Collapsed"></NavigationViewItem>
+                    <StackPanel>
+                        <Slider></Slider>
+                    </StackPanel>
                 </StackPanel>
             </NavigationView.PaneFooter>
             <ScrollViewer x:Name="Scroller">
