@@ -21,17 +21,25 @@
                     <NavigationViewItem Content="Выйти" x:Name="_logOutBtn" Tapped="LogOutBtn_Tapped" Visibility="Collapsed"></NavigationViewItem>
                 </StackPanel>
             </NavigationView.PaneFooter>
-            <ScrollViewer x:Name="Scroller">
-                <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.9*"></RowDefinition>
+                    <RowDefinition Height="0.1*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ScrollViewer x:Name="Scroller" Grid.Row="0">
                     <Frame x:Name="ContentFrame" Margin="0, 0, 16, 0">
                     </Frame>
-                    <MediaPlayerElement AreTransportControlsEnabled="True" Visibility="Collapsed" x:Name="_media">
-                        <MediaPlayerElement.TransportControls>
-                            <MediaTransportControls></MediaTransportControls>
-                        </MediaPlayerElement.TransportControls>
-                    </MediaPlayerElement>
-                </StackPanel>
-            </ScrollViewer>
+                </ScrollViewer>
+                <MediaPlayerElement AreTransportControlsEnabled="True" x:Name="_media" VerticalAlignment="Bottom" Grid.Row="1">
+                    <MediaPlayerElement.TransportControls>
+                        <MediaTransportControls IsFullWindowButtonVisible ="False"
+                                                IsZoomButtonVisible ="False"
+                                                IsNextTrackButtonVisible="True"
+                                                IsPreviousTrackButtonVisible="True"
+                                                />
+                    </MediaPlayerElement.TransportControls>
+                </MediaPlayerElement>
+            </Grid>
         </NavigationView>
     </Grid>
 </Page>

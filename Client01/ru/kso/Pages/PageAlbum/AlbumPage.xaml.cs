@@ -4,6 +4,7 @@ using Client01.ru.kso.Pages.PageArtist;
 using Client01.ru.kso.Pages.PageTrack;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Text;
 using Windows.Storage;
@@ -23,7 +24,7 @@ namespace Client01.ru.kso.Pages.PageAlbum
     {
         private readonly App _app;
         private List<Track> TrackList;
-        private List<Review> ReviewList;
+        private ObservableCollection<Review> ReviewList;
         private ApplicationDataContainer _localSettings;
         private Album _album;
         public AlbumPage()
@@ -47,7 +48,7 @@ namespace Client01.ru.kso.Pages.PageAlbum
         {
             try
             {
-                ReviewList = new List<Review>();
+                ReviewList = new ObservableCollection<Review>();
                 using (SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
                 {
                     connection.Open();
@@ -118,7 +119,11 @@ namespace Client01.ru.kso.Pages.PageAlbum
                 connection.Open();
                 ApplicationDataCompositeValue valuePairs = _localSettings.Values["acc"] as ApplicationDataCompositeValue;
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = string.Format(DBQueryCollection.QUERY_FOR_REVIEW_INSERT, valuePairs["email"].ToString(), _reviewTextInput.Text.Trim(), _album.Id.ToString());
+                string content = _reviewTextInput.Text.Trim();
+                string reviewer = valuePairs["email"].ToString();
+                Review review = new Review(reviewer, content);
+                ReviewList.Add(review);
+                cmd.CommandText = string.Format(DBQueryCollection.QUERY_FOR_REVIEW_INSERT, reviewer, content, _album.Id.ToString());
                 cmd.ExecuteNonQuery();
                 _reviewTextInput.Text = "";
             }

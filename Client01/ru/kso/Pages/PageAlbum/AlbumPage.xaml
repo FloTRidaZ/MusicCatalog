@@ -71,7 +71,7 @@
                     />
             </StackPanel>
             
-            <ListView RelativePanel.Below="_reviewBlockPanel" SelectionMode="None" IsItemClickEnabled="false" ItemsSource="{x:Bind ReviewList}" Margin="40, 20, 40, 0">
+            <ListView RelativePanel.Below="_reviewBlockPanel" SelectionMode="None" IsItemClickEnabled="false" ItemsSource="{x:Bind ReviewList}" Margin="40, 20, 40, 20">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="data:Review">
                         <StackPanel Margin="0, 20, 0, 0">

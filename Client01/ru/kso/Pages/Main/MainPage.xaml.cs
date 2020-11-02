@@ -9,6 +9,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x419
 
@@ -30,7 +31,11 @@ namespace Client01.ru.kso.Pages.Main
         public MainPage()
         {
             this.InitializeComponent();
-            _media.SetMediaPlayer(new MediaPlayer());
+            MediaPlayer mediaPlayer = new MediaPlayer
+            {
+                AudioCategory = MediaPlayerAudioCategory.Media
+            };
+            _media.SetMediaPlayer(mediaPlayer);
             _localSettings = ApplicationData.Current.LocalSettings;
             _items.Add(("Authorization", _toAuthorizationBtn));
             _items.Add(("Exit", _logOutBtn));
