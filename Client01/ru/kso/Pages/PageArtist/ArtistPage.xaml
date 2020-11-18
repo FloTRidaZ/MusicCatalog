@@ -29,7 +29,11 @@
                     FontSize="20"
                     TextWrapping="Wrap"
                     Margin="40, 20, 40, 0"/>
-            <GridView ItemsSource="{x:Bind AlbumList}" RelativePanel.Below="_info" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ArtistList_ItemClick" Margin="40, 20, 40, 0">
+            <GridView ItemsSource="{x:Bind AlbumList}" RelativePanel.Below="_info"
+                      SelectionMode="None"
+                      IsItemClickEnabled="True"
+                      ItemClick="ArtistList_ItemClick"
+                      Margin="40, 20, 40, 0">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="data:Album">
                         <StackPanel Width="200" Margin="2.5, 0, 2.5, 0">

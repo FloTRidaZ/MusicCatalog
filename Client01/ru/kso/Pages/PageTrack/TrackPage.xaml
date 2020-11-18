@@ -16,7 +16,10 @@
                 Height="300"
                 HorizontalAlignment="Left"
                 Margin="40, 20, 0, 0"/>
-            <StackPanel RelativePanel.RightOf="_cover" RelativePanel.AlignVerticalCenterWith="_cover" Margin="30, 20, 40, 0" x:Name="_dataPanel">
+            <StackPanel RelativePanel.RightOf="_cover" 
+                        RelativePanel.AlignVerticalCenterWith="_cover"
+                        Margin="30, 20, 40, 0"
+                        x:Name="_dataPanel">
                 <TextBlock
                     x:Name="_trackName"
                     FontSize="30"

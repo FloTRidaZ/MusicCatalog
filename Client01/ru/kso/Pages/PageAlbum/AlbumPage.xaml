@@ -17,7 +17,9 @@
                 Height="300"
                 Margin="40, 20, 0, 0"
                 HorizontalAlignment="Left"/>
-            <StackPanel RelativePanel.RightOf="_cover" RelativePanel.AlignVerticalCenterWith="_cover" Margin="20, 0, 40, 0">
+            <StackPanel RelativePanel.RightOf="_cover" 
+                        RelativePanel.AlignVerticalCenterWith="_cover"
+                        Margin="20, 0, 40, 0">
                 <TextBlock
                     x:Name="_albumName"
                     FontSize="30"/>
@@ -43,7 +45,8 @@
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="data:Track">
                         <StackPanel Width="200" Margin="2.5, 0, 2.5, 0">
-                            <Image Source="{x:Bind Album.CoverSrc}" Width="200" Height="200"></Image>
+                            <Image Source="{x:Bind Album.CoverSrc}" Width="200" 
+                                   Height="200"></Image>
                             <TextBlock
                             Text="{x:Bind Name}"
                             FontSize="18"
@@ -55,7 +58,9 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-            <StackPanel x:Name="_reviewBlockPanel" RelativePanel.Below="_trackList" Margin="40, 20, 40, 0">
+            <StackPanel x:Name="_reviewBlockPanel"
+                        RelativePanel.Below="_trackList"
+                        Margin="40, 20, 40, 0">
                 <TextBox
                     x:Name="_reviewTextInput"
                     Width="800"
@@ -71,7 +76,10 @@
                     />
             </StackPanel>
             
-            <ListView RelativePanel.Below="_reviewBlockPanel" SelectionMode="None" IsItemClickEnabled="false" ItemsSource="{x:Bind ReviewList}" Margin="40, 20, 40, 20">
+            <ListView RelativePanel.Below="_reviewBlockPanel"
+                      SelectionMode="None" IsItemClickEnabled="false"
+                      ItemsSource="{x:Bind ReviewList}" 
+                      Margin="40, 20, 40, 20">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="data:Review">
                         <StackPanel Margin="0, 20, 0, 0">

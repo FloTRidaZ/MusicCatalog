@@ -9,7 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <NavigationView x:Name="_navView"  SelectionChanged="NavigationView_SelectionChanged" Loaded="NavigationView_Loaded">
+        <NavigationView x:Name="_navView"  SelectionChanged="NavigationView_SelectionChanged"
+                        Loaded="NavigationView_Loaded">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Треки" Tag="track"/>
                 <NavigationViewItem Content="Исполнители" Tag="artist"/>
@@ -17,8 +18,10 @@
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <StackPanel>
-                    <NavigationViewItem Content="Авторизация" Tapped="ToAuthorizationItem_Tapped" x:Name="_toAuthorizationBtn"/>
-                    <NavigationViewItem Content="Выйти" x:Name="_logOutBtn" Tapped="LogOutBtn_Tapped" Visibility="Collapsed"></NavigationViewItem>
+                    <NavigationViewItem Content="Авторизация"
+                                        Tapped="ToAuthorizationItem_Tapped" x:Name="_toAuthorizationBtn"/>
+                    <NavigationViewItem Content="Выйти" x:Name="_logOutBtn"
+                                        Tapped="LogOutBtn_Tapped" Visibility="Collapsed"></NavigationViewItem>
                 </StackPanel>
             </NavigationView.PaneFooter>
             <Grid>
@@ -26,11 +29,13 @@
                     <RowDefinition Height="0.9*"></RowDefinition>
                     <RowDefinition Height="0.1*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <ScrollViewer x:Name="Scroller" Grid.Row="0">
+                <ScrollViewer x:Name="Scroller" Grid.Row="0"
+                              VerticalScrollBarVisibility="Auto">
                     <Frame x:Name="ContentFrame" Margin="0, 0, 16, 0">
                     </Frame>
                 </ScrollViewer>
-                <MediaPlayerElement AreTransportControlsEnabled="True" x:Name="_media" VerticalAlignment="Bottom" Grid.Row="1">
+                <MediaPlayerElement AreTransportControlsEnabled="True"
+                                    x:Name="_media" VerticalAlignment="Bottom" Grid.Row="1">
                     <MediaPlayerElement.TransportControls>
                         <MediaTransportControls IsFullWindowButtonVisible ="False"
                                                 IsZoomButtonVisible ="False"

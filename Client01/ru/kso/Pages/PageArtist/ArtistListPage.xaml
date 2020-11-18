@@ -10,7 +10,11 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <GridView x:Name="ArtistGrid" ItemsSource="{x:Bind ArtistList}" Margin="5, 5, 5, 5" SelectionMode="None" ItemClick="ArtistGrid_ItemClick" IsItemClickEnabled="True">
+        <GridView x:Name="ArtistGrid" ItemsSource="{x:Bind ArtistList}"
+                  Margin="5, 5, 5, 5"
+                  SelectionMode="None"
+                  ItemClick="ArtistGrid_ItemClick"
+                  IsItemClickEnabled="True">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="data:Artist">
                     <StackPanel Margin="2.5, 0, 2.5, 0">

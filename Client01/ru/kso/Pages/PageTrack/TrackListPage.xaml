@@ -10,11 +10,19 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel>
-        <GridView ItemsSource="{x:Bind TrackList}" Margin="5, 5, 5, 5" SelectionMode="None" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" x:Name="_trackListGrid">
+        <GridView ItemsSource="{x:Bind TrackList}" Margin="5, 5, 5, 5"
+                  SelectionMode="None" 
+                  ItemClick="GridView_ItemClick"
+                  IsItemClickEnabled="True" 
+                  x:Name="_trackListGrid">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="data:Track">
                     <StackPanel Margin="2.5, 0, 2.5, 0" Width="200">
-                        <Image Source="{x:Bind Album.CoverSrc}" Width="200" Height="200" UseLayoutRounding="True"></Image>
+                        <Image Source="{x:Bind Album.CoverSrc}" Width="200"
+                               Height="200"
+                               UseLayoutRounding="True">
+                            
+                        </Image>
                         <TextBlock
                             Text="{x:Bind Name}"
                             FontSize="18"
