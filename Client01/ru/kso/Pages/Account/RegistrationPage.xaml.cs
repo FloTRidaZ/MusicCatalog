@@ -4,13 +4,8 @@ using System.Data.SqlClient;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-// Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Client01.ru.kso.Pages.Account
 {
-    /// <summary>
-    /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
-    /// </summary>
     public sealed partial class RegistrationPage : Page
     {
         private readonly App _app;
