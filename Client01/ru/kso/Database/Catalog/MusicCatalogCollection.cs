@@ -55,7 +55,7 @@ namespace Client01.ru.kso.Database.Catalog
                 _catalog.SetAlbumList(albumList);
                 _catalog.SetTrackList(trackList);
             }
-            catch (SqlException)
+            catch (Exception)
             {
                 ShowErrorDialog();
             }

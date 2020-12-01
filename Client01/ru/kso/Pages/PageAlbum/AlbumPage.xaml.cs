@@ -67,7 +67,7 @@ namespace Client01.ru.kso.Pages.PageAlbum
 
                     }
                 }
-            } catch (SqlException)
+            } catch (Exception)
             {
                 ShowErrorSqlDialog();
             }
@@ -114,19 +114,27 @@ namespace Client01.ru.kso.Pages.PageAlbum
 
         private void ButtonSend_Click(object sender, RoutedEventArgs e)
         {
-            using(SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
+            try
             {
-                connection.Open();
-                ApplicationDataCompositeValue valuePairs = _localSettings.Values["acc"] as ApplicationDataCompositeValue;
-                SqlCommand cmd = connection.CreateCommand();
-                string content = _reviewTextInput.Text.Trim();
-                string reviewer = valuePairs["email"].ToString();
-                Review review = new Review(reviewer, content);
-                ReviewList.Add(review);
-                cmd.CommandText = string.Format(DBQueryCollection.QUERY_FOR_REVIEW_INSERT, reviewer, content, _album.Id.ToString());
-                cmd.ExecuteNonQuery();
-                _reviewTextInput.Text = "";
+                using (SqlConnection connection = new SqlConnection(_app.GetConnectionString()))
+                {
+                    connection.Open();
+                    ApplicationDataCompositeValue valuePairs = _localSettings.Values["acc"] as ApplicationDataCompositeValue;
+                    SqlCommand cmd = connection.CreateCommand();
+                    string content = _reviewTextInput.Text.Trim();
+                    string reviewer = valuePairs["email"].ToString();
+                    Review review = new Review(reviewer, content);
+                    ReviewList.Add(review);
+                    cmd.CommandText = string.Format(DBQueryCollection.QUERY_FOR_REVIEW_INSERT, reviewer, content, _album.Id.ToString());
+                    cmd.ExecuteNonQuery();
+                    _reviewTextInput.Text = "";
+                }
             }
+            catch (Exception)
+            {
+                ShowErrorSqlDialog();
+            }
+            
         }
 
     }

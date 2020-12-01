@@ -70,7 +70,7 @@ namespace Client01.ru.kso.Pages.Account
                     ShowDialog(success);
                 }
             }
-            catch (SqlException)
+            catch (Exception)
             {
                 ShowErrorDialog();
             }

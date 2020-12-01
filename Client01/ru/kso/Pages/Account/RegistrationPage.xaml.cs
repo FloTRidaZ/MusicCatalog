@@ -41,7 +41,8 @@ namespace Client01.ru.kso.Pages.Account
                     this.Frame.Navigate(typeof(AuthorizationPage));
                     ShowInfoDialog();
                 }
-            } catch (SqlException)
+            }
+            catch (Exception)
             {
                 ShowErrorDialog("Потеряно соединение с интернетом");
             }
