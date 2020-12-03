@@ -37,6 +37,8 @@ namespace Client01.ru.kso.Pages.PageAlbum
                 {
                     Text = "Оставлять комментарии могут только зарегистрированные пользователи"
                 };
+                infoTextBlock.FontSize = 20;
+                infoTextBlock.Margin = new Thickness(0, 20, 20, 20);
                 _reviewBlockPanel.Children.Add(infoTextBlock);
             }
         }
