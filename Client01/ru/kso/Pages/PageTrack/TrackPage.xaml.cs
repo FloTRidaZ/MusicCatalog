@@ -69,6 +69,16 @@ namespace Client01.ru.kso.Pages.PageTrack
 
         private async void BtnPlay_ClickAsync(object sender, RoutedEventArgs e)
         {
+            if (!User.IsLogIn())
+            {
+                await new ContentDialog
+                {
+                    Title = "Информация",
+                    Content = "Авторизуйтесь в системе для получения возможности прослушивания песен",
+                    PrimaryButtonText = "ОК"
+                }.ShowAsync();
+                return;
+            }
             _mediaElement.MediaPlayer.Pause();
             IRandomAccessStream src = null;
             await Task.Run(() =>

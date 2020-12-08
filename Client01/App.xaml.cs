@@ -14,6 +14,12 @@ namespace Client01
         private const string CONNECTION_STRING = @"Data Source = DESKTOP-HBEEL2G\SQLEXPRESS; Initial Catalog = MusicCatalogDB; User ID = sa; Password = flotridaz58rus";
         public MusicCatalogCollection CatalogCollection { get; private set; }
 
+        public MainPage MainPage {
+            get; set;
+        }
+
+
+
         public App()
         {
             this.InitializeComponent();

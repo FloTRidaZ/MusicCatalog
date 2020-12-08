@@ -116,7 +116,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ru\kso\Database\Datatype\User.cs" />
     <Compile Include="ru\kso\Database\Query\DBQueryCollection.cs" />
+    <Compile Include="ru\kso\Enum\PaneFooterType.cs" />
     <Compile Include="ru\kso\Pages\PageAlbum\AlbumListPage.xaml.cs">
       <DependentUpon>AlbumListPage.xaml</DependentUpon>
     </Compile>

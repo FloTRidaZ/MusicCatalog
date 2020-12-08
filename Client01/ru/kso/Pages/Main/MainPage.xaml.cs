@@ -1,4 +1,6 @@
-﻿using Client01.ru.kso.Pages.Account;
+﻿using Client01.ru.kso.Database.Datatype;
+using Client01.ru.kso.Enum;
+using Client01.ru.kso.Pages.Account;
 using Client01.ru.kso.Pages.PageAlbum;
 using Client01.ru.kso.Pages.PageArtist;
 using Client01.ru.kso.Pages.PageTrack;
@@ -20,7 +22,6 @@ namespace Client01.ru.kso.Pages.Main
             ("artist", typeof(ArtistListPage)),
             ("album", typeof(AlbumListPage)) 
         };
-        private readonly List<(string tag, NavigationViewItem item)> _items = new List<(string tag, NavigationViewItem item)>();
         private readonly ApplicationDataContainer _localSettings;
         public MainPage()
         {
@@ -31,13 +32,17 @@ namespace Client01.ru.kso.Pages.Main
             };
             _media.SetMediaPlayer(mediaPlayer);
             _localSettings = ApplicationData.Current.LocalSettings;
-            _items.Add(("Authorization", _toAuthorizationBtn));
-            _items.Add(("Exit", _logOutBtn));
             if (_localSettings.Values.ContainsKey("acc"))
             {
                 _toAuthorizationBtn.Visibility = Visibility.Collapsed;
                 _logOutBtn.Visibility = Visibility.Visible;
+                ApplicationDataCompositeValue values = _localSettings.Values["acc"] as ApplicationDataCompositeValue;
+                string name = values["email"].ToString();
+                string email = values["name"].ToString();
+                User.CreateInstance(email, name);
             }
+            App app = App.Current as App;
+            app.MainPage = this;
         }
 
 
@@ -59,13 +64,13 @@ namespace Client01.ru.kso.Pages.Main
 
         private void ToAuthorizationItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            ContentFrame.Navigate(typeof(AuthorizationPage), _items);
+            ContentFrame.Navigate(typeof(AuthorizationPage));
         }
 
         private void LogOutBtn_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            _toAuthorizationBtn.Visibility = Visibility.Visible;
-            _logOutBtn.Visibility = Visibility.Collapsed;
+            User.ToLogOut();
+            SwitchPaneFooter(PaneFooterType.LOG_OUT);
             _localSettings.Values.Remove("acc");
             ContentFrame.Navigate(typeof(TrackListPage));
             ShowDialog();
@@ -79,6 +84,33 @@ namespace Client01.ru.kso.Pages.Main
                 Content = "Вы вышли из аккаунта",
                 PrimaryButtonText = "ОК"
             }.ShowAsync();
+        }
+
+        public void SwitchPaneFooter(PaneFooterType type)
+        {
+            switch (type)
+            {
+                case PaneFooterType.LOG_IN:
+                    SwitchToLogOut();
+                    break;
+                case PaneFooterType.LOG_OUT:
+                    SwitchToLogIn();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void SwitchToLogIn()
+        {
+            _logOutBtn.Visibility = Visibility.Collapsed;
+            _toAuthorizationBtn.Visibility = Visibility.Visible;
+        }
+
+        private void SwitchToLogOut()
+        {
+            _logOutBtn.Visibility = Visibility.Visible;
+            _toAuthorizationBtn.Visibility = Visibility.Collapsed;
         }
     }
 }

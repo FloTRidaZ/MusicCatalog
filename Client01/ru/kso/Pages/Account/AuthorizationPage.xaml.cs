@@ -1,4 +1,5 @@
-﻿using Client01.ru.kso.Database.Query;
+﻿using Client01.ru.kso.Database.Datatype;
+using Client01.ru.kso.Database.Query;
 using Client01.ru.kso.Pages.PageTrack;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,6 @@ namespace Client01.ru.kso.Pages.Account
     public sealed partial class AuthorizationPage : Page
     {
         private readonly App _app;
-        private List<(string tag, NavigationViewItem item)> _items;
         public AuthorizationPage()
         {
             this.InitializeComponent();
@@ -45,11 +45,15 @@ namespace Client01.ru.kso.Pages.Account
                             return;
                         }
                         reader.Read();
+                        string name = reader.GetString(2);
                         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                        ApplicationDataCompositeValue valuePairs = new ApplicationDataCompositeValue();
-                        valuePairs.Add("email", email);
-                        valuePairs.Add("name", reader.GetString(2));
+                        ApplicationDataCompositeValue valuePairs = new ApplicationDataCompositeValue
+                        {
+                            { "email", email },
+                            { "name", name }
+                        };
                         localSettings.Values["acc"] = valuePairs;
+                        User.CreateInstance(email, name);
                     }
                     ContentDialog success = new ContentDialog
                     {
@@ -57,10 +61,7 @@ namespace Client01.ru.kso.Pages.Account
                         Content = "Авторизация прошла успешно",
                         PrimaryButtonText = "ОК"
                     };
-                    NavigationViewItem toAuthorizationItem = _items.Find(i => i.tag == "Authorization").item;
-                    NavigationViewItem exitItem = _items.Find(i => i.tag == "Exit").item;
-                    toAuthorizationItem.Visibility = Visibility.Collapsed;
-                    exitItem.Visibility = Visibility.Visible;
+                    _app.MainPage.SwitchPaneFooter(Enum.PaneFooterType.LOG_IN);
                     this.Frame.Navigate(typeof(TrackListPage));
                     ShowDialog(success);
                 }
@@ -81,11 +82,6 @@ namespace Client01.ru.kso.Pages.Account
             }.ShowAsync();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            _items = e.Parameter as List<(string tag, NavigationViewItem item)>;
-        }
 
         private async void ShowDialog(ContentDialog dialog)
         {

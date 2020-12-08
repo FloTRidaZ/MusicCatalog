@@ -29,7 +29,7 @@ namespace Client01.ru.kso.Pages.PageAlbum
             this.InitializeComponent();
             _app = Application.Current as App;
             _localSettings = ApplicationData.Current.LocalSettings;
-            if (!_localSettings.Values.ContainsKey("acc"))
+            if (!User.IsLogIn())
             {
                 _reviewTextInput.Visibility = Visibility.Collapsed;
                 _buttonSend.Visibility = Visibility.Collapsed;
